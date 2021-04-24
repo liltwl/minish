@@ -6,13 +6,55 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 14:37:28 by otaouil           #+#    #+#             */
-/*   Updated: 2021/04/09 15:41:47 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/04/24 11:16:02 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //---------------------------tools-----------------//
+
+void    envcheck(char **d, t_list *l)
+{
+    char *tmp;
+    t_list *t;
+    int i;
+
+    i = -1;
+    while (d[++i])
+        if (d[i][0] == '$')
+        {
+            if ((t = ft_lstfind(l, &d[i][1])))
+            {
+                tmp = d[i];
+                d[i] = ft_strdup(t->str);
+                free (tmp);
+            }
+        }
+}
+
+void	exec_cmd(char **cmd)
+{
+	pid_t	pid = 0;
+	int		status = 0;
+
+	// On fork
+	pid = fork();
+	if (pid == -1)
+		perror("fork");
+	// Si le fork a reussit, le processus pere attend l'enfant (process fork)
+	else if (pid > 0) {
+		// On block le processus parent jusqu'a ce que l'enfant termine puis
+		// on kill le processus enfant
+		waitpid(pid, &status, 0);
+		kill(pid, SIGTERM);
+	} else {
+		// Le processus enfant execute la commande ou exit si execve echoue
+		if (execve(cmd[0], cmd, NULL) == -1)
+			perror("shell");
+		exit(EXIT_FAILURE);
+	}
+}
 
 t_list		*ft_lstfind(t_list *lst, char *name)
 {
@@ -250,6 +292,7 @@ void        ft_docdret(t_list *l)
 
 void        ft_docd(t_list *l, char **p)
 {
+    //if (p)
     if (p[1] && !(ft_cmp("-", p[1])))
         ft_docdret(l);
     /*else if(p[1][0] == '~')
@@ -280,11 +323,12 @@ void    ft_check(char *p, t_list *l)
         do_pwd(str[1], l);
     else if(!ft_cmp(str[0],"env"))
         do_env(l);
-    else if(!ft_cmp(str[0],"ls"))
-        ft_dols();
+    /*else if(!ft_cmp(str[0],"ls"))
+        ft_dols();*/
     else if(!ft_cmp(str[0],"cd"))
         ft_docd(l, str);
-    
+    else
+        exec_cmd(str);
 }
 
 int     main(int argc,char  **argv, char **env)
@@ -302,16 +346,17 @@ int     main(int argc,char  **argv, char **env)
 	l = NULL; 
     i = -1;
     l = ft_addevnlist(&l, env);
-    ft_putstr(fclear);
+    //ft_putstr(fclear);
     while ((i = -1))
-    {   
+    {
         tmp = ft_lstfind(l, "PWD");
-        printf(" %s   \n",tmp->str);
+        printf(" %s  ",tmp->str);
         signal(SIGINT, my_int);
         if (!(gh = readline("$> ")))
-			return (1);
-		add_history(gh);
+	    	return (1);
+        add_history(gh);
         p = ft_split(gh, ';');
+        envcheck(p,l);
         while (p[++i])
             ft_check(p[i], l);
         ft_free_split(p);

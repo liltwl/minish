@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:38:46 by otaouil           #+#    #+#             */
-/*   Updated: 2021/04/09 15:40:16 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/04/24 10:48:06 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <libgen.h>
 #include <curses.h>
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 

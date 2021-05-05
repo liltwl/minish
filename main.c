@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 14:37:28 by otaouil           #+#    #+#             */
-/*   Updated: 2021/04/24 11:16:02 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/05/05 11:21:24 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,46 @@ void    envcheck(char **d, t_list *l)
         }
 }
 
-void	exec_cmd(char **cmd)
+void	get_absolute_path(char **cmd, t_list *l)
+{
+	t_list	*path;
+	char	*bin;
+	char	**path_split = NULL;
+
+	path = ft_lstfind(l, "PATH");
+	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
+    {
+		path_split = ft_split(path->str, ':');
+		// On boucle sur chaque dossier du path pour trouver l'emplacement du binaire
+		for (int i = 0; path_split[i]; i++) {
+			// alloc len du path + '/' + len du binaire + 1 pour le '\0'
+			bin = (char *)ft_calloc(sizeof(char), (strlen(path_split[i]) + 1 + strlen(cmd[0]) + 1));
+			if (bin == NULL)
+				break ;
+			strcat(bin, path_split[i]);
+			strcat(bin, "/");
+			strcat(bin, cmd[0]);
+			if (access(bin, F_OK) == 0)
+				break ;
+			free(bin);
+			bin = NULL;
+		}
+		ft_free_split(path_split);
+        if (bin)
+        {
+		    free(cmd[0]);
+		    cmd[0] = bin;
+        }
+	}
+}
+
+void	exec_cmd(char **cmd, t_list *l)
 {
 	pid_t	pid = 0;
 	int		status = 0;
 
 	// On fork
+    get_absolute_path(cmd, l);
 	pid = fork();
 	if (pid == -1)
 		perror("fork");
@@ -290,13 +324,28 @@ void        ft_docdret(t_list *l)
 	}
 }
 
+void        ft_docdsing(char *p, t_list *l)
+{
+    t_list *lst;
+    char *src;
+
+    if ((lst = ft_lstfind(l, "HOME")))
+	{
+		src = ft_strdup(lst->str);
+		change_oldpwd(l);
+		chdir(src);
+		free(src);
+        change_pwd(l);
+	}
+}
+
 void        ft_docd(t_list *l, char **p)
 {
     //if (p)
     if (p[1] && !(ft_cmp("-", p[1])))
         ft_docdret(l);
-    /*else if(p[1][0] == '~')
-        ft_docdsing(p[1], l);*/
+    else if(!p[1] || p[1][0] == '~')
+        ft_docdsing(p[1], l);
     else if(p[1])
     {
         change_oldpwd(l);
@@ -304,7 +353,9 @@ void        ft_docd(t_list *l, char **p)
         change_pwd(l);
     }
 }
-//------------------------------------------------------//
+
+
+
 void    ft_check(char *p, t_list *l)
 {
     int i;
@@ -328,8 +379,88 @@ void    ft_check(char *p, t_list *l)
     else if(!ft_cmp(str[0],"cd"))
         ft_docd(l, str);
     else
-        exec_cmd(str);
+        exec_cmd(str, l);
 }
+//-----------------------pipe-------------------------------//
+
+int execpipe (char *argv1, char *argv2, t_list *l) {
+ int fds[2];
+    pipe(fds);
+    int i;
+    //get_absolute_path(argv1);
+   // get_absolute_path(argv2);
+    pid_t pid1 = fork();
+    if (pid1 == 0) 
+    {
+        pipe(fds);
+        pid_t pid = fork();
+        if (pid == -1) { //error
+            //char *error = strerror(errno);
+            printf("error fork!!\n");
+            return 1;
+        } 
+        if (pid == 0) { // child process
+            close(fds[1]);
+            i = dup(0);
+            dup2(fds[0], 0);
+            //close(fds[0]);
+            // run command AFTER pipe character in userinput
+            exec_cmd(argv2, l);
+            close(fds[1]);
+            /*close(0);
+            dup2(i,0);*/
+            exit(EXIT_SUCCESS);
+            //char *error = strerror(errno);
+            //printf("unknown command\n");
+            
+            return 0;
+        } else { // parent process
+            close(fds[0]);
+            i = dup(1);
+            dup2(fds[1], 1);
+            close(fds[1]);
+            executecmd(argv1); // run command BEFORE pipe character in userinput
+            exec_cmd(argv1, l);
+            close(fds[1]);
+            /*close(1);
+            dup2(i,1);
+            waitpid(pid,&i,0);
+            kill(pid, SIGTERM);*/
+            //printf("unknown command\n");
+            exit(EXIT_SUCCESS);
+            return 0;
+        }
+        printf("unknown command\n");
+    }
+    else
+    {
+        waitpid(pid1,&i,0);
+       // kill(pid1, SIGTERM);
+    }
+    return 1;
+}
+
+//----------------------------------------------------//
+
+
+
+void    pipechck(char **p, t_list *l)
+{
+    int i;
+    char **tmp;
+    
+    i = -1;
+    while (p[++i])
+    {
+        tmp = ft_split(p[i],'|'); //ls | cat -e ; cd libft
+        if (ft_strchr(p[i],'|') != NULL)
+           execpipe(tmp[0],tmp[1],l);
+        else
+            ft_check(p[i], l);
+        ft_free_split(tmp);
+    }
+}
+
 
 int     main(int argc,char  **argv, char **env)
 {
@@ -339,12 +470,10 @@ int     main(int argc,char  **argv, char **env)
     t_list  *l;
 	t_list  *tmp;
 
-    i = -1;
     //getcwd(p, 100);
     //ft_getdir(&gh);
     //printf(" %s   \n",gh);
 	l = NULL; 
-    i = -1;
     l = ft_addevnlist(&l, env);
     //ft_putstr(fclear);
     while ((i = -1))
@@ -357,8 +486,9 @@ int     main(int argc,char  **argv, char **env)
         add_history(gh);
         p = ft_split(gh, ';');
         envcheck(p,l);
+        pipechck(p, l);
         while (p[++i])
-            ft_check(p[i], l);
+            printf("-------  %s -------\n",p[i]);
         ft_free_split(p);
     }
 }

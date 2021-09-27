@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/09/26 12:35:06 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/09/27 19:11:02 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,6 +330,142 @@ t_cmd	*ft_addcmdlist(t_cmd **l, char *evn, int *x)
 	*x = i;
 	return (tmp);
 }
+
+//---------------------help-----------------------//
+
+void	do_help(void)
+{
+	ft_putstr_fd("Available commands:\n", 1);
+	ft_putstr_fd("echo\ncd\npwd\nexport\nunset\nenv\nexit\n", 1);
+}
+
+//---------------------------echo-------------------//
+
+void	do_echo(t_data *data, t_cmd *cmd)
+{
+	int		i;
+	int		j;
+	char	**str;
+
+	str = cmd->str;
+	i = 1;
+	j = 0;
+	while(str[i])
+	{
+		write(1, str[i], strlen(str[i]));
+		if (str[++i])
+			write(1, " ", 1);
+	}
+	write(1, "\n", 1);
+}
+
+//--------------------pwd--------------------------//
+
+void    do_pwd(t_data *l)
+{
+    t_env  *tmp;
+
+    if ((tmp = ft_lstfind(l->env, "PWD")))
+        ft_putstr_fd(tmp->str, 1);
+    write(1, "\n", 1);
+}
+
+//----------------------env-------------------------//
+
+void    do_env(t_data *data)
+{
+	t_env	*l;
+
+	l = data->env;
+    while(l != NULL)
+    {
+        ft_putstr_fd(l->name, 1);
+        write(1, "=", 1);
+        ft_putstr_fd(l->str, 1);
+        write(1, "\n", 1);
+        l = l->next;
+    }
+}
+
+//----------------------env-------------------------//
+
+void	change_oldpwd(t_data *data)
+{
+	char	*str;
+	t_env	*oldpwd;
+
+	oldpwd = ft_lstfind(data->env, "OLDPWD");
+	str = oldpwd->str;
+	free (str);
+	if (!(str = getcwd(NULL, 0)))
+		return ;
+	oldpwd->str = ft_strdup(str);
+	free (str);
+}
+
+void	change_pwd(t_data *data)
+{
+	char	*str;
+	t_env	*pwd;
+
+	pwd = ft_lstfind(data->env, "PWD");
+	str = pwd->str;
+	free (str);
+	if (!(str = getcwd(NULL, 0)))
+		return ;
+	pwd->str = ft_strdup(str);
+	free (str);
+}
+
+void        ft_docdret(t_data *data)
+{
+    t_env			*lst;
+	char			*src;
+
+	lst = data->env;
+	if ((lst = ft_lstfind(lst, "OLDPWD")))
+	{
+		src = ft_strdup(lst->str);
+		change_oldpwd(data);
+		chdir(src);
+		free(src);
+        change_pwd(data);
+	}
+}
+
+void        ft_docdsing(t_data *data)
+{
+    t_env			*lst;
+	char			*src;
+
+	lst = data->env;
+	if ((lst = ft_lstfind(lst, "HOME")))
+	{
+		src = ft_strdup(lst->str);
+		change_oldpwd(data);
+		chdir(src);
+		free(src);
+        change_pwd(data);
+	}
+}
+
+void	ft_docd(t_data *data, t_cmd *cmd)
+{
+	char		**str;
+	
+	str = cmd->str;
+	if (str[1] && !(ft_cmp("-", str[1])))
+        ft_docdret(data);
+	if (!str[1] || str[1][0] == '~')
+        ft_docdsing(data);
+	else if(str[1] && !str[2])
+    {
+        change_oldpwd(data);
+        chdir(str[1]);
+        change_pwd(data);
+    }
+}
+
    /*************************exec*******************************/
 
 char	*ft_getabspath(char *path, char **tmp)
@@ -368,7 +504,8 @@ void	exec_cmd(char **cmd1, t_data *l)
 		perror("fork");
 	else if (pid > 0) 
     {
-		waitpid(pid, &status, 0);
+		waitpid(pid, &l->exitstatu, 0);
+		l->exitstatu = l->exitstatu / 2;
 		kill(pid, SIGTERM);
 	} 
     else 
@@ -377,10 +514,7 @@ void	exec_cmd(char **cmd1, t_data *l)
 		perror("shell");
 		exit(EXIT_FAILURE);
 	}
-	//ft_close("error : command not found", 127);
 }
-
-
 
 void    ft_check(t_data *l, t_cmd *cmd)
 {
@@ -389,20 +523,20 @@ void    ft_check(t_data *l, t_cmd *cmd)
 
     i = 0;
 	str = cmd->str;
-    if(!ft_cmp(str[0], "help"))
-        ;//do_help();
-    else if(!ft_cmp(str[0],"echo"))
-        ;//do_echo(str, l);
-    else if(!ft_cmp(str[0],"exit"))
+    if(!ft_strncmp(str[0], "help", 5))
+        do_help();
+    else if(!ft_strncmp(str[0], "echo", 5))
+        do_echo(l, cmd);
+    else if(!ft_strncmp(str[0],"exit", 5))
         exit(0);
-    else if(!ft_cmp(str[0],"pwd"))
-        ;//do_pwd(str[1], l);
-    else if(!ft_cmp(str[0],"env"))
-        ;//do_env(l);
-    /*else if(!ft_cmp(str[0],"ls"))
+    else if(!ft_strncmp(str[0],"pwd", 4) && !str[1])
+        do_pwd(l);
+    else if(!ft_strncmp(str[0],"env", 4) && !str[1])
+        do_env(l);
+    /*else if(!ft_strncmp(str[0],"ls", 2))
         ft_dols();*/
-    else if(!ft_cmp(str[0],"cd"))
-        ;//t_docd(l, str);
+    else if(!ft_strncmp(str[0],"cd", 3))
+        ft_docd(l, cmd);
     else
         exec_cmd(str, l);
 }
@@ -436,15 +570,14 @@ void	mlpipe(t_data *data)
 			printf("error : fork failed");
 		else if (pid == 0)
 		{
-			//write(2, "oo\n", 3);
-			//printf("%s\n", ft_findcmd(data, i)->str[0]);
 			execdup(data->numcmd, fds, i, fd);
 			ft_check(data, ft_findcmd(data, i));
-			exit(0);
+			exit(data->exitstatu);
 		}
 		else
 		{
-			wait(NULL);
+			waitpid(pid, &data->exitstatu, 0);
+			data->exitstatu = data->exitstatu / 2;
 			close(fds[1]);
 			fd = fds[0];
 		}
@@ -457,11 +590,12 @@ int main(int argc,char  **argv, char **env)
 	char	*line;
 
 	data.env = NULL;
+	data.exitstatu = 0;
 	data.env = ft_addevnlist(&data.env, env);
 	while (1)
 	{
-		printf("%s",ft_lstfind(data.env, "PWD")->str);
-		if (!(line = readline("$> ")))
+		printf("%d",data.exitstatu);
+		if (!(line = readline("yoo$> ")))
 	    	return (1);
 		if (line[0])
 		{

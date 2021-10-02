@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/09/27 19:11:02 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/10/02 10:21:58 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,6 @@ int checkbackslash(char **str, int j, int *d)
 		j =  (i / 2) + !(!(i % 2)) * 1;
 		ft_strlcpy(tmp, tmp1, x + 1 - j);
 		ft_strcpy(&tmp[x - j], &tmp1[x]);
-		printf("%s\n",tmp);
 		free (tmp1);
 		*str = tmp;
 		*d = x - j;
@@ -305,29 +304,38 @@ int checkbackslash(char **str, int j, int *d)
 
 }
 
-void    envcheck(char **d, t_env *l)
+void    envcheck(char **d, t_data *l)
 {
     char *tmp;
     int i;
 	char *str;
+	char	c;
 	int		j;
 
     i = -1;
 	str = "";
+	c = 0;
     while (d[++i])
 	{
 		j = -1;
 		while (d[i][++j])
 		{
-			if (d[i][j] == '$' && checkbackslash(&d[i], j, &j))
+			if (d[i][j] == '"' && c != '\'')
+				c = !c * d[i][j] + 0 * !(!c);
+			else if ((d[i][j] == '\'' && c != '"' )|| c == '\'')
 			{
-				if (ft_lstfind(l, &d[i][j + 1]))
-				{
-					str = ft_lstfind(l, &d[i][j + 1])->str;
-					tmp = malloc(strlen(str) + j + 1);
-				}
-				else
-					tmp = malloc(j + 1);
+				if (d[i][j] == '\'')
+					c = !c * 0 + '\'' * !(!c);
+				c = '\'';
+				while ( d[i][++j] && d[i][j] != '\'');
+			}
+			else if (d[i][j] == '$')  // && checkbackslash(&d[i], j, &j))
+			{
+				if (!ft_strncmp("?", &d[i][j + 1], 2))
+					str = ft_itoa(l->exitstatu);
+				else if (ft_lstfind(l->env, &d[i][j + 1]))
+					str = ft_lstfind(l->env, &d[i][j + 1])->str;
+				tmp = malloc(strlen(str) + j + 1);
 				ft_strlcpy(tmp, d[i], j +1);
 				strcpy(&tmp[j], str);
 				free (d[i]);
@@ -365,7 +373,7 @@ t_cmd	*ft_lstnewcmd(char *str, int fd0, int fd1, t_data *l)
 		return (NULL);
 	ft_spaceskip(str, &i);
 	elt->str = ft_split(&str[i], ' ');
-	envcheck(elt->str, l->env);
+	envcheck(elt->str, l);
 	elt->fd0 = fd0;
 	elt->fd1 = fd1;
 	elt->next = NULL;
@@ -568,6 +576,15 @@ void	ft_docd(t_data *data, t_cmd *cmd)
     }
 }
 
+//----------------------export-------------------------//
+
+void	do_export(t_cmd *cmd, t_data *data)
+{
+	int		i;
+
+	i = 0;
+	...	
+}
    /*************************exec*******************************/
 
 char	*ft_getabspath(char *path, char **tmp)
@@ -607,8 +624,9 @@ void	exec_cmd(char **cmd1, t_data *l)
 	else if (pid > 0) 
     {
 		waitpid(pid, &status, 0);
-		l->exitstatu = WEXITSTATUS(status);
-		printf("%d   --  %d\n", l->exitstatu, status);
+		l->exitstatu = 0;
+		if (status)
+			l->exitstatu = 127;
 		kill(pid, SIGTERM);
 	} 
     else 

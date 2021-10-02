@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 17:38:46 by otaouil           #+#    #+#             */
-/*   Updated: 2021/09/22 16:53:07 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/10/02 07:37:45 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_data
 	t_env		*env;
 	t_cmd		*cmd;
 	int			numcmd;
+	int			exitstatu;
 }               t_data;
 
 #endif

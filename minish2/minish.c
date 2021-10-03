@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/10/02 10:21:58 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/10/03 18:52:56 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,13 +239,19 @@ t_env	*ft_addevnlist(t_env **l, char **evn)
 
 	i = 0;
     str	= ft_split(evn[i], '=');
-	ft_addenv_back(l, ft_lstnewenv(str[0], str[1]));
+	if (str[1])
+		ft_addenv_back(l, ft_lstnewenv(str[0], str[1]));
+	else
+		ft_addenv_back(l, ft_lstnewenv(str[0], ""));
     str = ft_free_split(str);
     tmp = *l;
 	while (evn[++i])
 	{
 		str	= ft_split(evn[i], '=');
-		ft_addenv_back(l, ft_lstnewenv(str[0], str[1]));
+		if (str[1])
+			ft_addenv_back(l, ft_lstnewenv(str[0], str[1]));
+		else
+			ft_addenv_back(l, ft_lstnewenv(str[0], ""));
 		str = ft_free_split(str);
 	}
 	return (tmp);
@@ -577,14 +583,194 @@ void	ft_docd(t_data *data, t_cmd *cmd)
 }
 
 //----------------------export-------------------------//
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
+{
+	unsigned char	*str1;
+	unsigned char	*str2;
 
-void	do_export(t_cmd *cmd, t_data *data)
+	str1 = (unsigned char*)s1;
+	str2 = (unsigned char*)s2;
+	while (n--)
+	{
+		if (!*str1 && *str2)
+			return (*str1 - *str2);
+		if (*str1 && !*str2)
+			return (*str1 - *str2);
+		if (*str1 != *str2)
+			return (*str1 - *str2);
+		str1++;
+		str2++;
+	}
+	if (strlen(s1) > strlen(s2))
+		return 1;
+	else if (strlen(s1) < strlen(s2))
+		return -1;
+	return (0);
+}
+
+t_env	*ft_smllst(t_env *env)
+{
+	char	*str;
+	t_env	*tmp;
+
+	str = env->name;
+	tmp = env;
+	env = env->next;
+	while (env)
+	{
+		if (ft_memcmp(str, env->name, strlen(str) + 1) < 0)
+		{
+			tmp = env;
+			str = env->name;
+		}
+		env = env->next;
+	}
+	return (tmp);
+}
+
+t_env	*ft_getbiglst(t_env	*env, t_env *big)
+{
+	t_env	*tmp;
+	char	*c;
+	char	*p;
+	int		j;
+
+	tmp = NULL;
+	p = NULL;
+	if (big)
+		p = strdup(big->name);
+	c = strdup("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`");
+	while (env)
+	{
+		if ((ft_memcmp(c, env->name, strlen(c) + 1) > 0 && !p)||
+			((p && ft_memcmp(p, env->name, strlen(env->name) + 1) < 0)
+			&& ft_memcmp(c, env->name, strlen(env->name) + 1) >= 0))
+		{
+			tmp = env;
+			free (c);
+			c = strdup(env->name);
+		}
+		env = env->next;
+	}
+	free (p);
+	free (c);
+	return (tmp);
+}
+
+void	ft_printsortlst(t_data	*data)
 {
 	int		i;
+	t_env	*tmp;
+
+	tmp = NULL;
+	while (1)
+	{
+		tmp = ft_getbiglst(data->env, tmp);
+		//printf("%s--\n", tmp->name);
+		write(1, tmp->name, strlen(tmp->name));
+		write(1, "='", 2);
+		write(1, tmp->str, strlen(tmp->str));
+		write(1, "'\n", 2);
+		if (!ft_cmp(ft_smllst(data->env)->name, tmp->name))
+			break ;
+	}
+}
+
+void	ft_lstupdate(t_data *data, char **str)
+{
+	int		i;
+	char	**p;
+	t_env	*env;
+	t_env	*tmp;
 
 	i = 0;
-	...	
+	while (str[++i])
+	{
+		p = ft_split(str[i], '=');
+		env = ft_lstfind(data->env, p[0]);
+		if (env)
+		{
+			free (env->str);
+			if (p[1])
+				env->str = strdup(p[1]);
+			else
+				env->str = strdup("");
+		}
+		else
+		{
+			if (p[1])
+				env = ft_lstnewenv(p[0], p[1]);
+			else
+				env = ft_lstnewenv(p[0], "");
+			tmp = ft_lastenv(data->env);
+			ft_addenv_back(&data->env, env);
+		}
+		ft_free_split(p);
+	}
 }
+
+void	do_export(t_data *data, t_cmd *cmd)
+{
+	int		i;
+	char	**str;
+
+	str = cmd->str;
+	i = 0;
+	if (!str[1])
+		ft_printsortlst(data);
+	else
+		ft_lstupdate(data, str);
+		
+}
+
+ /*************************exec*******************************/
+
+void	ft_deletlst(char *name, t_data *data)
+{
+	t_env *lst;
+	t_env	*tmp;
+
+	lst = data->env;
+	tmp = NULL;
+	while (lst)
+	{
+		if (!strncmp(name, lst->name, strlen(lst->name) + 1))
+			break ;
+		tmp = lst;
+		lst = lst->next;
+	}
+	if (!lst)
+		return ;
+	if (tmp)
+	{
+		tmp->next = lst->next;
+		free (lst->str);
+		free (lst->name);
+		free (lst);
+	}
+	else
+	{
+		data->env = lst->next;
+		free (lst->str);
+		free (lst->name);
+		free (lst);
+	}
+}
+
+ void	do_unset(t_data *data, t_cmd *cmd)
+ {
+	int		i;
+	char	**str;
+
+	i = 0;
+	str = cmd->str;
+	if (!str[1])
+		return ;
+	while (str[++i])
+	{
+		ft_deletlst(str[i],data);
+	}
+ }
    /*************************exec*******************************/
 
 char	*ft_getabspath(char *path, char **tmp)
@@ -606,10 +792,26 @@ char	*ft_getabspath(char *path, char **tmp)
 		close(fd);
 		free(cmd);
 	}
+	ft_free_split(p);
 	close(fd);
 	return (cmd);
 }
 
+void	ft_free_cmd(t_data *data)
+{
+	t_cmd	*cmd;
+	t_cmd	*tmp;
+
+	cmd = data->cmd;
+	while (cmd)
+	{
+		ft_free_split(cmd->str);
+		tmp = cmd;
+		cmd = cmd->next;
+		free (tmp);
+	}
+	data->cmd = NULL;
+}
 
 void	exec_cmd(char **cmd1, t_data *l)
 {
@@ -617,7 +819,6 @@ void	exec_cmd(char **cmd1, t_data *l)
 	pid_t	pid;
 	int		status;
 
-	pcmd = ft_getabspath(ft_lstfind(l->env, "PATH")->str, cmd1);
 	pid = fork();
 	if (pid == -1)
 		perror("fork");
@@ -631,6 +832,7 @@ void	exec_cmd(char **cmd1, t_data *l)
 	} 
     else 
     {
+		pcmd = ft_getabspath(ft_lstfind(l->env, "PATH")->str, cmd1);
 		execve(pcmd, cmd1, NULL);
 		perror("shell");
 		exit(EXIT_FAILURE);
@@ -656,6 +858,10 @@ void    ft_check(t_data *l, t_cmd *cmd)
         do_env(l);
     else if(!strncmp(str[0],"cd", 3))
         ft_docd(l, cmd);
+	else if(!strncmp(str[0],"export", 7))
+        do_export(l, cmd);
+	else if(!strncmp(str[0],"unset", 6))
+        do_unset(l, cmd);
     else
         exec_cmd(str, l);
 }
@@ -721,12 +927,13 @@ int main(int argc,char  **argv, char **env)
 		{
 			data.cmd = ft_addcmdlist(&data.cmd, line, &data.numcmd, &data);
 			add_history(line);
-			//printf("%s\n", line);
-			/*if (data.numcmd == 1)
+			if (data.numcmd == 1)
 				ft_check(&data, data.cmd);
-			else*/
-			mlpipe(&data);
+			else
+				mlpipe(&data);
+			ft_free_cmd(&data);
 		}
+		free (line);
 		//data.cmd = data.cmd->next;
 	}
 }

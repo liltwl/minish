@@ -6,14 +6,14 @@ CC = gcc
 
 FLAGS =   -I ./libft/ -g -L ./libft/ -l ft -L/usr/include -lreadline 	
 
-SRCS = main.c
+SRCS = minish.c
 
 all: $(NAME)
 
 $(NAME):
-	$(CC) $(FLAGS) $(SRCS)
+	$(CC) $(SRCS) -L/usr/include -lreadline -g libft.a -o minishell
 run:
-	./a.out
+	./minishell
 
 test:
 	$(CC) $(FLAGS) test.c

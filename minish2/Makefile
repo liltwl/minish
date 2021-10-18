@@ -6,12 +6,12 @@ CC = gcc
 
 FLAGS =   -I ./libft/ -g -L ./libft/ -l ft -L/usr/include -lreadline 	
 
-SRCS = minish.c
+SRCS = main.c
 
 all: $(NAME)
 
 $(NAME):
-	$(CC) $(SRCS) -L/usr/include -lreadline -g
+	$(CC) $(FLAGS) $(SRCS)
 run:
 	./a.out
 

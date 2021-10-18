@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/10/03 18:52:56 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/10/15 16:00:26 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,56 @@ int		ft_putstr_fd(char *s, int fd)
 	return (i);
 }
 
+static void	my_int(int ret)
+{
+	ft_putstr_fd("\nyoo$> ", 1);
+	ret = 0;
+}
+
 /*********************libft*******************************/
+
+int	ft_isalpha(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	return (0);
+}
+
+void	ft_error(char *p, int i)
+{
+	ft_putstr_fd(p, 1);
+	exit (i);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s != c && *s != '\0')
+		s++;
+	if (*s == c)
+		return ((char *)s);
+	return (NULL);
+}
+
+void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
+{
+	unsigned char		*str;
+	const unsigned char	*str1;
+
+	str = (unsigned char*)dst;
+	str1 = (unsigned char*)src;
+	while (n-- > 0 && *str1)
+	{
+		*(str++) = *(str1);
+		str1++;
+		if ((*str1 == (unsigned char)c))
+		{
+			*(str) = 0;
+			return (str);
+		}
+	}
+	return (NULL);
+}
+
 int		ft_spaceskip(char *line, int *i)
 {
 	while ((line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
@@ -32,6 +81,7 @@ int		ft_spaceskip(char *line, int *i)
 		(*i)++;
 	return (1);
 }
+
 char	*ft_strdup(const char *src)
 {
 	char *res;
@@ -442,6 +492,8 @@ t_cmd	*ft_addcmdlist(t_cmd **l, char *evn, int *x, t_data *data)
 		ft_addcmd_back(l, ft_lstnewcmd(str[i], 0, 1, data));
 	str = ft_free_split(str);
 	*x = i;
+	if (i > 556)
+		data->exitstatu = 128;
 	return (tmp);
 }
 
@@ -475,24 +527,34 @@ void	do_echo(t_data *data, t_cmd *cmd)
 
 //--------------------pwd--------------------------//
 
-void    do_pwd(t_data *l)
+void    do_pwd(t_data *l, t_cmd *cmd)
 {
     t_env  *tmp;
 
-    if ((tmp = ft_lstfind(l->env, "PWD")))
-        ft_putstr_fd(tmp->str, 1);
-    write(1, "\n", 1);
+	if (cmd->str[1])
+		l->exitstatu = 1;
+	else
+	{
+		if ((tmp = ft_lstfind(l->env, "PWD")))
+			ft_putstr_fd(tmp->str, 1);
+		write(1, "\n", 1);
+	}
 }
 
 //----------------------env-------------------------//
 
 
 
-void    do_env(t_data *data)
+void    do_env(t_data *data, t_cmd *cmd)
 {
 	t_env	*l;
 
 	l = data->env;
+	if (cmd->str[1])
+	{
+		data->exitstatu = 127;
+		return ;
+	}
     while(l != NULL)
     {
         ft_putstr_fd(l->name, 1);
@@ -503,7 +565,7 @@ void    do_env(t_data *data)
     }
 }
 
-//----------------------env-------------------------//
+//----------------------CD-------------------------//
 
 void	change_oldpwd(t_data *data)
 {
@@ -572,12 +634,13 @@ void	ft_docd(t_data *data, t_cmd *cmd)
 	str = cmd->str;
 	if (str[1] && !(ft_cmp("-", str[1])))
         ft_docdret(data);
-	if (!str[1] || str[1][0] == '~')
+	else if (!str[1] || str[1][0] == '~')
         ft_docdsing(data);
 	else if(str[1] && !str[2])
     {
         change_oldpwd(data);
-        chdir(str[1]);
+        if (chdir(str[1]) <= 0)
+			data->exitstatu = 1;
         change_pwd(data);
     }
 }
@@ -639,12 +702,12 @@ t_env	*ft_getbiglst(t_env	*env, t_env *big)
 	p = NULL;
 	if (big)
 		p = strdup(big->name);
-	c = strdup("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`");
+	c = strdup("~~~~~~~~");
 	while (env)
 	{
 		if ((ft_memcmp(c, env->name, strlen(c) + 1) > 0 && !p)||
 			((p && ft_memcmp(p, env->name, strlen(env->name) + 1) < 0)
-			&& ft_memcmp(c, env->name, strlen(env->name) + 1) >= 0))
+			&& ft_memcmp(c, env->name, strlen(env->name) + 1) > 0))
 		{
 			tmp = env;
 			free (c);
@@ -666,44 +729,130 @@ void	ft_printsortlst(t_data	*data)
 	while (1)
 	{
 		tmp = ft_getbiglst(data->env, tmp);
-		//printf("%s--\n", tmp->name);
+		write(1, "declare -x ", 11);
 		write(1, tmp->name, strlen(tmp->name));
-		write(1, "='", 2);
+		write(1, "=\"", 2);
 		write(1, tmp->str, strlen(tmp->str));
-		write(1, "'\n", 2);
-		if (!ft_cmp(ft_smllst(data->env)->name, tmp->name))
+		write(1, "\"\n", 2);
+		if (!ft_cmp(tmp->name, ft_smllst(data->env)->name))
 			break ;
 	}
+}
+
+int	ft_findc(char *str, char c)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
+void	addnewenv(char	**p, t_data *data)
+{
+	t_env	*env;
+	t_env	*tmp;
+
+	env = ft_lstfind(data->env, p[0]);
+	if (env)
+	{
+		free (env->str);
+		if (p[1])
+			env->str = strdup(p[1]);
+		else
+			env->str = strdup("");
+	}
+	else
+	{
+		if (p[1])
+			env = ft_lstnewenv(p[0], p[1]);
+		else
+			env = ft_lstnewenv(p[0], "");
+		tmp = ft_lastenv(data->env);
+		ft_addenv_back(&data->env, env);
+	}
+}
+
+char	**mycatstr(char *str, int i)
+{
+	char	**p;
+	char	*tmp;
+
+	p = malloc(sizeof(char **) * 3);
+	if (i)
+	{
+		tmp = malloc(i + 2);
+		if (str[i - 1] == '+')
+			ft_strlcpy(tmp, str, i);
+		else
+			ft_strlcpy(tmp, str, i + 1);
+		p[0] = tmp;
+		tmp = malloc(strlen(&str[i] + 2));
+		ft_strlcpy(tmp, &str[i + 1], strlen(&str[i]));
+		p[1] = tmp;
+		p[2] = NULL;
+	}
+	else
+	{
+		tmp = malloc(i + 2);
+		ft_strcpy(tmp, str);
+		p[0] = tmp;
+		p[1] = NULL;
+	}
+	return (p);
+}
+
+void	export_join(t_data *data, char **p)
+{
+	char	*str;
+	char	*tmp;
+	t_env	*env;
+
+	env = ft_lstfind(data->env, p[0]);
+	if (env)
+	{
+		if (p[1])
+			str = strdup(p[1]);
+		else
+			str = strdup("");
+		tmp = ft_strjoin(env->str, str);
+		free (env->str);
+		free (str);
+		env->str = tmp;
+	}
+	else
+		addnewenv(p, data);
 }
 
 void	ft_lstupdate(t_data *data, char **str)
 {
 	int		i;
 	char	**p;
-	t_env	*env;
-	t_env	*tmp;
+	int		j;
 
 	i = 0;
 	while (str[++i])
 	{
-		p = ft_split(str[i], '=');
-		env = ft_lstfind(data->env, p[0]);
-		if (env)
-		{
-			free (env->str);
-			if (p[1])
-				env->str = strdup(p[1]);
-			else
-				env->str = strdup("");
-		}
+		j = ft_findc(str[i], '=');
+		p = mycatstr(str[i], j);
+		if (!ft_isalpha(str[i][0]) && str[i][0] != '_')
+			data->exitstatu = 1;
 		else
 		{
-			if (p[1])
-				env = ft_lstnewenv(p[0], p[1]);
+			if (ft_strchr(p[0], '+'))
+			{
+				data->exitstatu = 1;
+				return ;
+			}
+			if (str[i][j - 1] == '+')
+				export_join(data, p);
 			else
-				env = ft_lstnewenv(p[0], "");
-			tmp = ft_lastenv(data->env);
-			ft_addenv_back(&data->env, env);
+				addnewenv(p, data);
 		}
 		ft_free_split(p);
 	}
@@ -720,10 +869,9 @@ void	do_export(t_data *data, t_cmd *cmd)
 		ft_printsortlst(data);
 	else
 		ft_lstupdate(data, str);
-		
 }
 
- /*************************exec*******************************/
+ /*************************unset*******************************/
 
 void	ft_deletlst(char *name, t_data *data)
 {
@@ -771,6 +919,54 @@ void	ft_deletlst(char *name, t_data *data)
 		ft_deletlst(str[i],data);
 	}
  }
+   /*************************exit*******************************/
+
+int	ft_myatoi(const char *str)
+{
+	unsigned long long	m;
+	char				*p;
+	int					i;
+	int					n;
+
+	p = (char *)str;
+	m = 0;
+	n = 1;
+	i = 0;
+	if (p[i] == '-' || p[i] == '+')
+	{
+		n = -1;
+		if (p[++i] == '-')
+			ft_error("", 255);
+	}
+	while (p[i] && p[i] >= '0' && p[i] <= '9')
+	{
+		m = (m * 10) + (p[i++] - 48);
+		if (m >= 9223372036854775807)
+			ft_error("", 255);
+	}
+	if (p[i] && !(p[i] >= '0' && p[i] <= '9'))
+		ft_error("", 255);
+	return (m * n);
+}
+
+void	ft_exit(t_cmd *cmd, t_data *data)
+{
+	char	i;
+	char	**p;
+
+	p = cmd->str;
+	i = 0;
+	if (p[1] && p[2])
+	{
+		data->exitstatu = 1;
+		ft_putstr_fd("", 1);
+		return ;
+	}
+	else if (p[1]) 
+		i = (char)ft_myatoi(p[1]);
+	exit (i);
+}
+
    /*************************exec*******************************/
 
 char	*ft_getabspath(char *path, char **tmp)
@@ -825,9 +1021,7 @@ void	exec_cmd(char **cmd1, t_data *l)
 	else if (pid > 0) 
     {
 		waitpid(pid, &status, 0);
-		l->exitstatu = 0;
-		if (status)
-			l->exitstatu = 127;
+		l->exitstatu = WEXITSTATUS(status);
 		kill(pid, SIGTERM);
 	} 
     else 
@@ -835,9 +1029,11 @@ void	exec_cmd(char **cmd1, t_data *l)
 		pcmd = ft_getabspath(ft_lstfind(l->env, "PATH")->str, cmd1);
 		execve(pcmd, cmd1, NULL);
 		perror("shell");
-		exit(EXIT_FAILURE);
+		exit(127);
 	}
 }
+
+
 
 void    ft_check(t_data *l, t_cmd *cmd)
 {
@@ -851,11 +1047,11 @@ void    ft_check(t_data *l, t_cmd *cmd)
     else if(!strncmp(str[0], "echo", 5))
         do_echo(l, cmd);
     else if(!strncmp(str[0],"exit", 5))
-        exit(0);
-    else if(!strncmp(str[0],"pwd", 4) && !str[1])
-        do_pwd(l);
-    else if(!strncmp(str[0],"env", 4) && !str[1])
-        do_env(l);
+        ft_exit(cmd, l);
+    else if(!strncmp(str[0],"pwd", 4))
+        do_pwd(l, cmd);
+    else if(!strncmp(str[0],"env", 4))
+        do_env(l, cmd);
     else if(!strncmp(str[0],"cd", 3))
         ft_docd(l, cmd);
 	else if(!strncmp(str[0],"export", 7))
@@ -865,6 +1061,7 @@ void    ft_check(t_data *l, t_cmd *cmd)
     else
         exec_cmd(str, l);
 }
+
 /**********************pipe************************/
 
 void	execdup(int	i, int *fds, int x, int fd)
@@ -913,27 +1110,41 @@ int main(int argc,char  **argv, char **env)
 {
 	t_data	data;
 	char	*line;
+	char	**p;
+	int		i;
 
+	p = NULL;
 	data.env = NULL;
 	data.cmd = NULL;
 	data.exitstatu = 0;
 	data.env = ft_addevnlist(&data.env, env);
 	while (1)
 	{
-		printf("%d",data.exitstatu);
-		if (!(line = readline("yoo$> ")))
+		//
+		//printf("%d",data.exitstatu);
+		signal(SIGINT, my_int);
+		i = 0;
+		if (!(line = readline("yoo$>")))
 	    	return (1);
-		if (line[0])
+		add_history(line);
+		p = ft_split(line, ';');
+		while (p[i])
 		{
-			data.cmd = ft_addcmdlist(&data.cmd, line, &data.numcmd, &data);
-			add_history(line);
-			if (data.numcmd == 1)
-				ft_check(&data, data.cmd);
-			else
-				mlpipe(&data);
-			ft_free_cmd(&data);
+			if (p[i][0])
+			{
+				//data.exitstatu = 0;
+				data.cmd = ft_addcmdlist(&data.cmd, p[i], &data.numcmd, &data);
+				if (data.numcmd == 1)
+					ft_check(&data, data.cmd);
+				else if (data.numcmd < 557)
+					mlpipe(&data);
+				ft_free_cmd(&data);
+			}
+			i++;
 		}
+		ft_free_split(p);
 		free (line);
 		//data.cmd = data.cmd->next;
 	}
+	return 0;
 }

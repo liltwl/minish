@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/10/15 16:00:26 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/10/19 20:42:33 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -918,33 +918,31 @@ void	ft_deletlst(char *name, t_data *data)
 	{
 		ft_deletlst(str[i],data);
 	}
- }
+	data->exitstatu = 0;
    /*************************exit*******************************/
 
-int	ft_myatoi(const char *str)
+int	ft_myatoi(char *str)
 {
 	unsigned long long	m;
-	char				*p;
 	int					i;
 	int					n;
 
-	p = (char *)str;
 	m = 0;
 	n = 1;
 	i = 0;
-	if (p[i] == '-' || p[i] == '+')
+	if (str[i] == '-' || str[i] == '+')
 	{
 		n = -1;
-		if (p[++i] == '-')
+		if (str[++i] == '-')
 			ft_error("", 255);
 	}
-	while (p[i] && p[i] >= '0' && p[i] <= '9')
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
 	{
-		m = (m * 10) + (p[i++] - 48);
-		if (m >= 9223372036854775807)
+		m = (m * 10) + (str[i++] - 48);
+		if ((m > 9223372036854775807 && n > 0) || (m - 1 > 9223372036854775807 && n < 0))
 			ft_error("", 255);
 	}
-	if (p[i] && !(p[i] >= '0' && p[i] <= '9'))
+	if (str[i] && !(str[i] >= '0' && str[i] <= '9'))
 		ft_error("", 255);
 	return (m * n);
 }
@@ -955,7 +953,7 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	char	**p;
 
 	p = cmd->str;
-	i = 0;
+	i = data->exitstatu;
 	if (p[1] && p[2])
 	{
 		data->exitstatu = 1;
@@ -1142,6 +1140,8 @@ int main(int argc,char  **argv, char **env)
 			}
 			i++;
 		}
+		if (!p[0])
+			data.exitstatu = 0;
 		ft_free_split(p);
 		free (line);
 		//data.cmd = data.cmd->next;

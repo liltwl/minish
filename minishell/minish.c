@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/10/30 00:28:06 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/01 18:25:34 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1315,8 +1315,14 @@ void    ft_check(t_data *l, t_cmd *cmd)
 void	execdup(t_data *data, int *fds, int x, int fd)
 {
 	t_cmd *cmd;
+	t_list *tmp;
+	int i;
 
-	cmd = ft_findcmd(data->cmd_list, x);
+	i = -1;
+	tmp = data->cmd_list;
+	while (++i < x)
+		tmp = tmp->next;
+	cmd = tmp->content;
 	if (x != 0)
 	{
 		dup2(fd, 0);
@@ -1326,6 +1332,8 @@ void	execdup(t_data *data, int *fds, int x, int fd)
 		dup2(cmd->in, 0);
 	if (data->numcmd - 1 != x)
 		dup2(fds[1], 1);
+	else
+		dup2(cmd->out, 1);
 	close(fds[0]);
 }
 
@@ -1337,7 +1345,7 @@ void	mlpipe(t_data *data)
 	int		fd;
 
 	i = -1;
-	while (++i < data->numcmd )
+	while (++i < data->numcmd)
 	{
 		pipe(fds);
 		pid = fork();
@@ -1345,7 +1353,9 @@ void	mlpipe(t_data *data)
 			printf("error : fork failed");
 		else if (pid == 0)
 		{
+			//printf("%d\n",ft_findcmd(data->cmd_list, i)->in);
 			execdup(data, fds, i, fd);
+			close(fds[0]);
 			ft_check(data, ft_findcmd(data->cmd_list, i));
 			exit(data->exitstatu);
 		}
@@ -1416,7 +1426,7 @@ int		main(int argc, char **argv, char **env)
 		signal(SIGINT, my_int);
 		if (!(g_data->line = readline("ader🤡$>")))
 	    	return (1);
-		if (g_data->line)
+		if (g_data->line[0])
 		{
 			parser();
 			//print_cmd();

@@ -26,7 +26,7 @@ t_list	*get_args(t_list **args ,t_type	*types, t_cmd **cmd)
 		tmp = tmp->next;
 	}
 	(*cmd)->str = ll_to_dp(*args);
-	while ((*cmd)->str[i])
+	//while ((*cmd)->str[i])
 		//printf(">>>>>%s\n", (*cmd)->str[i++]);
 	// t_list *list = *args;
 	// while (list)
@@ -64,6 +64,7 @@ int	ft_heredoc(char *str)
 
 void	get_in(int *i, t_list *list_files, t_type *expanded_types)
 {
+	*i = 0;
 	if (list_files)
 	{
 		expanded_types = expanded_types->next;
@@ -88,6 +89,8 @@ void	get_in(int *i, t_list *list_files, t_type *expanded_types)
 void	get_out(int *i, t_list *list_files, t_type *expanded_types)
 {
 	char	*s;
+
+	*i = 1;
 	if (list_files)
 	{
 		s = ft_lstlast(list_files)->content;

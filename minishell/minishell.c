@@ -65,6 +65,7 @@ int	ft_heredoc(char *str)
 void	get_in(int *i, t_list *list_files, t_type *expanded_types)
 {
 	*i = 0;
+	char	*s;
 	if (list_files)
 	{
 		expanded_types = expanded_types->next;
@@ -73,16 +74,19 @@ void	get_in(int *i, t_list *list_files, t_type *expanded_types)
 			// printf("file_out is = %s %d\n", expanded_types->word, expanded_types->type);
 			if (expanded_types->prev->type == 5)
 			{
+				s = expanded_types->word;
 				//printf("file_in %s\n", expanded_types->word);
 				*i = ft_heredoc(expanded_types->word);
 			}
 			else if (expanded_types->prev->type == 6)
 			{
+				s = expanded_types->word;
 				//printf("%s\n", expanded_types->word);
 				*i = open(expanded_types->word, O_RDONLY);
 			}	
 			expanded_types = expanded_types->next;
 		}
+		//printf("file_in is = %s\n", s);
 	}
 }
 
@@ -93,20 +97,25 @@ void	get_out(int *i, t_list *list_files, t_type *expanded_types)
 	*i = 1;
 	if (list_files)
 	{
-		s = ft_lstlast(list_files)->content;
-		//printf("file_out is = %s\n", s);
-		while (strcmp(expanded_types->word, s) != 0)
-			expanded_types = expanded_types->next;
-		if (expanded_types->prev->type == 4)
-			*i = open(s, O_WRONLY | O_CREAT | O_TRUNC , 0777);
-		else if (expanded_types->prev->type == 3)
-			*i = open(s, O_WRONLY | O_CREAT | O_APPEND , 0777);
-		while (list_files)
+		expanded_types = expanded_types->next;
+		while (expanded_types)
 		{
+		//s = ft_lstlast(list_files)->content;
+		//while (strcmp(expanded_types->word, s) != 0)
+			s = expanded_types->word;
+			if (expanded_types->prev->type == 4)
+				*i = open(s, O_WRONLY | O_CREAT | O_TRUNC , 0777);  ///hadi asat ra kant khasra mhm ra 9aditha
+			else if (expanded_types->prev->type == 3)
+				*i = open(s, O_WRONLY | O_CREAT | O_APPEND , 0777);
+			expanded_types = expanded_types->next;
+		}
+		/*while (list_files)
+		{
+			printf("file_out is = %s\n", list_files->content);
 			if (ft_strncmp(s, list_files->content, strlen(s) + 1) != 0)
 				open(list_files->content, O_WRONLY | O_CREAT | O_TRUNC , 0777);
 			list_files = list_files->next;
-		}
+		}*/
 	}
 }
 // > file echo sdsd > file2

@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/01 18:25:34 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/02 15:45:36 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -745,12 +745,12 @@ void	do_echo(t_data *data, t_cmd *cmd)
 		j = 1;
 	while(str[i])
 	{
-		write(1, str[i], strlen(str[i]));
+		write(cmd->out, str[i], strlen(str[i]));
 		if (str[++i])
-			write(1, " ", 1);
+			write(cmd->out, " ", 1);
 	}
 	if (j == 0)
-		write(1, "\n", 1);
+		write(cmd->out, "\n", 1);
 	data->exitstatu = 0;
 }
 
@@ -766,8 +766,8 @@ void    do_pwd(t_data *l, t_cmd *cmd)
 		l->exitstatu = 1;
 	else
 	{
-		ft_putstr_fd(str, 1);
-		write(1, "\n", 1);
+		ft_putstr_fd(str, cmd->out);
+		write(cmd->out, "\n", 1);
 	}
 	l->exitstatu = 0;
 }
@@ -790,10 +790,10 @@ void    do_env(t_data *data, t_cmd *cmd)
     while(l != NULL)
     {
 		env = l->content;
-        ft_putstr_fd(env->name, 1);
-        write(1, "=", 1);
-        ft_putstr_fd(env->content, 1);
-        write(1, "\n", 1);
+        ft_putstr_fd(env->name, cmd->out);
+        write(cmd->out, "=", 1);
+        ft_putstr_fd(env->content, cmd->out);
+        write(cmd->out, "\n", 1);
         l = l->next;
     }
 	data->exitstatu = 0;
@@ -961,7 +961,7 @@ t_env	*ft_getbiglst(t_list *tmp1, t_env *big)
 	return (tmp);
 }
 
-void	ft_printsortlst(t_data	*data)
+void	ft_printsortlst(t_data	*data, t_cmd *cmd)
 {
 	int		i;
 	t_env	*tmp;
@@ -972,11 +972,11 @@ void	ft_printsortlst(t_data	*data)
 	{
 		i++;
 		tmp = ft_getbiglst(data->env, tmp);
-		write(1, "declare -x ", 11);
-		write(1, tmp->name, strlen(tmp->name));
-		write(1, "=\"", 2);
-		write(1, tmp->content, strlen(tmp->content));
-		write(1, "\"\n", 2);
+		write(cmd->out, "declare -x ", 11);
+		write(cmd->out, tmp->name, strlen(tmp->name));
+		write(cmd->out, "=\"", 2);
+		write(cmd->out, tmp->content, strlen(tmp->content));
+		write(cmd->out, "\"\n", 2);
 		//if (!ft_strncmp(tmp->name, ft_smllst(data->env)->name, ft_strlen(tmp->name) + 1))
 		//	break ;
 	}
@@ -1121,7 +1121,7 @@ void	do_export(t_data *data, t_cmd *cmd)
 	str = cmd->str;
 	i = 0;
 	if (!str[1])
-		ft_printsortlst(data);
+		ft_printsortlst(data, cmd);
 	else
 		ft_lstupdate(data, str);
 }
@@ -1207,7 +1207,7 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	if (p[1] && p[2])
 	{
 		data->exitstatu = 1;
-		ft_putstr_fd("", 1);
+		ft_putstr_fd("", cmd->out);
 		return ;
 	}
 	else if (p[1]) 
@@ -1273,9 +1273,12 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 	} 
     else 
     {
-		if (cmd->in != 0)
+		if (l->numcmd == 1)
+        {
 			dup2(cmd->in, 0);
-		execve(cmd->cmd, cmd1, NULL);
+			dup2(cmd->out, 1);
+        }
+        execve(cmd->cmd, cmd1, NULL);
 		perror("shell");
 		exit(127);
 	}
@@ -1287,24 +1290,23 @@ void    ft_check(t_data *l, t_cmd *cmd)
 {
     char *str;
 
-	str = cmd->str[0];
-	if (cmd->str == NULL)
+	if (!cmd->str)
 		return ;
-    else if(!strncmp(str, "help", 5))
+    else if(!strncmp(cmd->str[0], "help", 5))
         do_help();
-    else if(!strncmp(str, "echo", 5))
+    else if(!strncmp(cmd->str[0], "echo", 5))
         do_echo(l, cmd);
-    else if(!strncmp(str,"exit", 5))
+    else if(!strncmp(cmd->str[0],"exit", 5))
         ft_exit(cmd, l);
-    else if(!strncmp(str,"pwd", 4))
+    else if(!strncmp(cmd->str[0],"pwd", 4))
         do_pwd(l, cmd);
-    else if(!strncmp(str,"env", 4))
+    else if(!strncmp(cmd->str[0],"env", 4))
         do_env(l, cmd);
-    else if(!strncmp(str,"cd", 3))
+    else if(!strncmp(cmd->str[0],"cd", 3))
         ft_docd(l, cmd);
-	else if(!strncmp(str,"export", 7))
+	else if(!strncmp(cmd->str[0],"export", 7))
         do_export(l, cmd);
-	else if(!strncmp(str,"unset", 6))
+	else if(!strncmp(cmd->str[0],"unset", 6))
         do_unset(l, cmd);
     else
         exec_cmd(cmd->str, l, cmd);
@@ -1315,11 +1317,11 @@ void    ft_check(t_data *l, t_cmd *cmd)
 void	execdup(t_data *data, int *fds, int x, int fd)
 {
 	t_cmd *cmd;
-	t_list *tmp;
-	int i;
+    t_list *tmp;
+    int     i;
 
-	i = -1;
-	tmp = data->cmd_list;
+    i = -1;
+    tmp = data->cmd_list;
 	while (++i < x)
 		tmp = tmp->next;
 	cmd = tmp->content;
@@ -1328,12 +1330,8 @@ void	execdup(t_data *data, int *fds, int x, int fd)
 		dup2(fd, 0);
 		close(fd);
 	}
-	else
-		dup2(cmd->in, 0);
 	if (data->numcmd - 1 != x)
 		dup2(fds[1], 1);
-	else
-		dup2(cmd->out, 1);
 	close(fds[0]);
 }
 
@@ -1345,7 +1343,7 @@ void	mlpipe(t_data *data)
 	int		fd;
 
 	i = -1;
-	while (++i < data->numcmd)
+	while (++i < data->numcmd )
 	{
 		pipe(fds);
 		pid = fork();
@@ -1353,9 +1351,8 @@ void	mlpipe(t_data *data)
 			printf("error : fork failed");
 		else if (pid == 0)
 		{
-			//printf("%d\n",ft_findcmd(data->cmd_list, i)->in);
+            //ft_putnbr_fd(i, 2);
 			execdup(data, fds, i, fd);
-			close(fds[0]);
 			ft_check(data, ft_findcmd(data->cmd_list, i));
 			exit(data->exitstatu);
 		}

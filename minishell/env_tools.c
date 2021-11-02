@@ -20,8 +20,6 @@ void	init_env_list(char **envp)
 		a = malloc(sizeof(t_env));
 		a->name = ft_strdup(s[0]);
 		a->content = ft_strdup(s[1]);
-		printf("---");
-		ft_print_split(s);
 		ft_lstadd_back(&(env), ft_lstnew(a));
 		i++;
 	}

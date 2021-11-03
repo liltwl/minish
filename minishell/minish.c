@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/02 15:45:36 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/03 15:32:46 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -768,8 +768,8 @@ void    do_pwd(t_data *l, t_cmd *cmd)
 	{
 		ft_putstr_fd(str, cmd->out);
 		write(cmd->out, "\n", 1);
+		l->exitstatu = 0;
 	}
-	l->exitstatu = 0;
 }
 
 //----------------------env-------------------------//
@@ -784,6 +784,7 @@ void    do_env(t_data *data, t_cmd *cmd)
 	l = data->env;
 	if (cmd->str[1])
 	{
+		
 		data->exitstatu = 127;
 		return ;
 	}
@@ -974,9 +975,13 @@ void	ft_printsortlst(t_data	*data, t_cmd *cmd)
 		tmp = ft_getbiglst(data->env, tmp);
 		write(cmd->out, "declare -x ", 11);
 		write(cmd->out, tmp->name, strlen(tmp->name));
-		write(cmd->out, "=\"", 2);
-		write(cmd->out, tmp->content, strlen(tmp->content));
-		write(cmd->out, "\"\n", 2);
+		if (tmp->content[0])
+		{
+			write(cmd->out, "=\"", 2);
+			write(cmd->out, tmp->content, strlen(tmp->content));
+			write(cmd->out, "\"", 1);
+		}
+		write(cmd->out, "\n", 1);
 		//if (!ft_strncmp(tmp->name, ft_smllst(data->env)->name, ft_strlen(tmp->name) + 1))
 		//	break ;
 	}
@@ -1414,6 +1419,7 @@ int		main(int argc, char **argv, char **env)
 
 	g_data = malloc(sizeof(t_data));
 	init_env_list(env);
+	g_data->numcmd = 0;
 	argc = 0;
 	argv = NULL;
 	while (1)
@@ -1437,8 +1443,6 @@ int		main(int argc, char **argv, char **env)
 			//free_nodes_cmd(g_data->cmd_list);
 			free_functio();
 		}
-		else
-			g_data->exitstatu = 0;
 		// check_words(tmp);
 	}
 	return (0);

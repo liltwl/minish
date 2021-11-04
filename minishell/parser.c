@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:48:20 by mamali            #+#    #+#             */
-/*   Updated: 2021/10/30 01:09:29 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/04 00:17:07 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ void	parser(void)
 {
 	t_type	*type;
 	t_type	*tmp;
-
+	t_list	*tmp1;
+	char 	*str;
+	
+	str = NULL;
 	type = NULL;
 	tmp = function(type, 0, 0, 0);
 	if (tmp)
@@ -55,10 +58,7 @@ void	parser(void)
 		ft_lstadd_back(&g_data->tokkens, ft_lstnew(tmp));
 		tmp = NULL;
 	}
-	char *str;
-	t_list *tmp1;
-	
-	str = NULL;
 	tmp1 = g_data->tokkens;
+	syntax_error(tmp1);
 	expand_cmdlist(tmp1, str);
 }

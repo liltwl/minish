@@ -6,139 +6,21 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/03 15:32:46 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/04 19:36:37 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*int		ft_putstr_fd(char *s, int fd)
+static void	sig_handler(int sig)
 {
-	int	i;
-
-	i = 0;
-	fd = 0;
-	while (s[i] != '\0')
-		write(1, &s[i++], 1);
-	return (i);
-}*/
-
-static void	my_int(int ret)
-{
-	ft_putstr_fd("\nyoo$> ", 1);
-	ret = 0;
-}
-
-/*********************libft*******************************/
-
-/*char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*p;
-	int		i;
-	int		j;
-
-	i = strlen((char *)s1);
-	j = strlen((char *)s2);
-	if (!(p = malloc(i + j + 1)))
-		return (0);
-	strcpy(p, (char *)s1);
-	strcpy(&p[i], (char *)s2);
-	return (p);
-}
-
-
-int	ft_power(int nb, int power)
-{
-	int i;
-
-	i = nb;
-	if (power < 0)
-		return (0);
-	else if (power == 0)
-		return (1);
-	else if (power >= 1)
-		i *= ft_power(nb, power - 1);
-	return (i);
-}
-
-
-int		ft_intlen(int n)
-{
-	int i;
-
-	i = 0;
-	while (n >= 10 || n <= -10)
+	if (sig == SIGINT)
 	{
-		i++;
-		n /= 10;
+		write(2, "\n", 1);
+		ft_putstr_fd("yoo$> ", 2);
+		g_data->exitstatu = 130;
 	}
-	return (i);
 }
-
-void	ft_comnbr(int nb, char *s)
-{
-	int		i;
-	int		n;
-	int		j;
-
-	j = 0;
-	n = nb;
-	i = ft_power(10, ft_intlen(n));
-	while (i > 0)
-	{
-		n = nb / i;
-		nb %= i;
-		s[j++] = n + '0';
-		i /= 10;
-	}
-	s[j] = '\0';
-}
-
-char	*ft_itoa(int n)
-{
-	char	*p;
-	int		i;
-
-	i = 0;
-	if (!(p = malloc(ft_intlen(n) + 1)))
-		return (0);
-	if (n == -2147483648)
-	{
-		n %= 1000000000;
-		*p = '-';
-		p[1] = '2';
-		n *= -1;
-		i = 2;
-	}
-	else if (n < 0)
-	{
-		*p = '-';
-		n *= -1;
-		i = 1;
-	}
-	ft_comnbr(n, &p[i]);
-	return (p);
-}
-
-int	ft_isalpha(int c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	return (0);
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	while (n-- > 0 && *s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return (0);
-}*/
 
 void	ft_error(char *p, int i)
 {
@@ -146,34 +28,6 @@ void	ft_error(char *p, int i)
 	exit (i);
 }
 
-/*char	*ft_strchr(const char *s, int c)
-{
-	while (*s != c && *s != '\0')
-		s++;
-	if (*s == c)
-		return ((char *)s);
-	return (NULL);
-}
-
-void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
-{
-	unsigned char		*str;
-	const unsigned char	*str1;
-
-	str = (unsigned char*)dst;
-	str1 = (unsigned char*)src;
-	while (n-- > 0 && *str1)
-	{
-		*(str++) = *(str1);
-		str1++;
-		if ((*str1 == (unsigned char)c))
-		{
-			*(str) = 0;
-			return (str);
-		}
-	}
-	return (NULL);
-}*/
 
 int		ft_spaceskip(char *line, int *i)
 {
@@ -183,27 +37,6 @@ int		ft_spaceskip(char *line, int *i)
 	return (1);
 }
 
-/*char	*ft_strdup(const char *src)
-{
-	char *res;
-
-	if (!(res = (char *)malloc(strlen((char *)src) + 1)))
-		return (0);
-	ft_strcpy(res, (char *)src);
-	return (res);
-}
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	int i;
-
-	i = -1;
-	while (src[++i] != '\0')
-		dest[i] = src[i];
-	dest[i] = '\0';
-	return (dest);
-}
-*/
 int	ft_cmp(char *s1, char *s2)
 {
 	int i;
@@ -262,100 +95,7 @@ char    **ft_print_split(char **d)
 	return (NULL);
 }
 
-/*char	*ft_mystrjoin(char const *s1, char const *s2)
-{
-	char	*p;
-	int		i;
-	int		j;
 
-	i = strlen((char *)s1);
-	j = strlen((char *)s2);
-	p = malloc(i + j + 2);
-	if (!p)
-		return (0);
-	strcpy(p, (char *)s1);
-	strcpy(&p[i], "/");
-	strcpy(&p[i + 1], (char *)s2);
-	return (p);
-}
-
-int	number_of_words(char *str, char c)
-{
-	int	nbr;
-	int	i;
-	int	indice;
-
-	nbr = 0;
-	i = 0;
-	indice = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] != c)
-		{
-			if (indice != 1)
-			{
-				nbr++;
-				indice = 1;
-			}
-		}
-		else
-			indice = 0;
-		i++;
-	}
-	return (nbr);
-}
-
-int	word_size(char *str, char c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != c && str[i])
-		i++;
-	return (i);
-}
-
-void	fill_string(char *str, char *cas, char c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != c && str[i])
-	{
-		cas[i] = str[i];
-		i++;
-	}
-	cas[i] = '\0';
-}
-
-char	**ft_split(char const *s, char c)
-{
-	char	**tab;
-	int		n;
-	int		i;
-	int		j;
-
-	i = -1;
-	j = -1;
-	tab = (char **)malloc((number_of_words((char *)s, c) + 1) * 8);
-	n = 0;
-	while (s[++i] != '\0')
-	{
-		if (s[i] != c)
-		{
-			if (n != 1)
-			{
-				tab[++j] = malloc(word_size((char *)&s[i], c) + 1);
-				fill_string((char *)&s[i], tab[j], c);
-				n = 1;
-			}
-		}
-		else
-			n = 0;
-	}
-	tab[++j] = 0;
-	return (tab);
-}*/
 
  /**********************env***lst*******************************/
 
@@ -374,159 +114,6 @@ t_env		*ft_lstfind(t_list *lst, char *name)
 	return (NULL);
 }
 
-/*t_env	*ft_lstnewenv(char *name, char *str)
-{
-	t_env	*elt;
-
-	if (!(elt = (t_env *)malloc(sizeof(* elt))))
-		return (NULL);
-	elt->name = ft_strdup(name);
-	elt->str = ft_strdup(str);
-	elt->next = NULL;
-	return (elt);
-}
-
-t_env	*ft_lastenv(t_env *lst)
-{
-	while (lst)
-	{
-		if (!lst->next)
-			return (lst);
-		lst = lst->next;
-	}
-	return (lst);
-}
-
-void	ft_addenv_back(t_env **alst, t_env *new)
-{
-	t_env	*last;
-
-	if (alst)
-	{
-		if (*alst)
-		{
-			last = ft_lastenv(*alst);
-			last->next = new;
-		}
-		else
-			*alst = new;
-	}
-}
-
-t_env	*ft_addevnlist(t_env **l, char **evn)
-{
-    char    **str;
-    int     i;
-
-	i = -1;
-	while (evn[++i])
-	{
-		str	= ft_split(evn[i], '=');
-		if (str[1])
-			ft_addenv_back(l, ft_lstnewenv(str[0], str[1]));
-		else
-			ft_addenv_back(l, ft_lstnewenv(str[0], ""));
-		str = ft_free_split(str);
-	}
-	return (*l);
-}*/
-   /**************************lst**cmd****************************/
-/*size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	k;
-
-	i = 0;
-	k = strlen((char *)src);
-	if (size == 0)
-		return (k);
-	while (i < size - 1 && src[i])
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (k);
-}*/
-
-
-
-/*int checkbackslash(char **str, int j, int *d)
-{
-	int i;
-	int	x;
-	char *tmp;
-	char  *tmp1;
-
-	x = j;
-	i = 0;
-	tmp1 = *str;
-	while (--j >= 0)
-	{
-		if (tmp1[j] == '\\')
-			i++;
-		else
-			break ;
-	}
-	if (i > 0)
-	{
-		tmp = malloc(strlen(tmp1));
-		j =  (i / 2) + !(!(i % 2)) * 1;
-		ft_strlcpy(tmp, tmp1, x + 1 - j);
-		ft_strcpy(&tmp[x - j], &tmp1[x]);
-		free (tmp1);
-		*str = tmp;
-		*d = x - j;
-		return (!(i % 2));
-	}
-	else
-		return (1);
-
-}
-
-void    envcheck(char **d, t_data *l)
-{
-    char *tmp;
-    int i;
-	char *str;
-	char	c;
-	int		j;
-
-    i = -1;
-	str = "";
-	c = 0;
-    while (d[++i])
-	{
-		j = -1;
-		while (d[i][++j])
-		{
-			if (d[i][j] == '"' && c != '\'')
-				c = !c * d[i][j] + 0 * !(!c);
-			else if ((d[i][j] == '\'' && c != '"' )|| c == '\'')
-			{
-				if (d[i][j] == '\'')
-					c = !c * 0 + '\'' * !(!c);
-				c = '\'';
-				while ( d[i][++j] && d[i][j] != '\'');
-			}
-			else if (d[i][j] == '$')  // && checkbackslash(&d[i], j, &j))
-			{
-				if (!ft_strncmp("?", &d[i][j + 1], 2))
-					str = ft_itoa(l->exitstatu);
-				else if (ft_lstfind(l->env, &d[i][j + 1]))
-					str = ft_lstfind(l->env, &d[i][j + 1])->str;
-				tmp = malloc(strlen(str) + j + 1);
-				ft_strlcpy(tmp, d[i], j +1);
-				strcpy(&tmp[j], str);
-				free (d[i]);
-				j = strlen(str) + j + 1;
-				tmp[j] = 0;
-				d[i] = tmp;
-				break ;
-			}
-		}
-	}
-}*/
 t_cmd	*ft_findcmd(t_list *data, int id)
 {
 	t_cmd	*tmp;
@@ -542,185 +129,7 @@ t_cmd	*ft_findcmd(t_list *data, int id)
 	}
 	return (NULL);
 }
-/*
-int	ft_heredoc(char *str)
-{
-	int		fd[2];
-	char	*line;
-	int		x;
 
-	x = 1;
-	pipe(fd);
-	while (x)
-	{
-		line = readline("");
-		x = strcmp(line, str);
-		if (!x)
-			break ;
-		else
-			write(fd[1], line, strlen(line));
-		free(line);
-		write(fd[1], "\n", 1);
-	}
-	if (line)
-		free(line);
-	close(fd[1]);
-	return (fd[0]);
-}
-
-int		ft_frstr(t_cmd *l, t_data *data, int *i, int j)
-{
-	char **tmp;
-	int fd;
-
-	if (j == 2)
-		fd = ft_heredoc(l->str[++*i]);
-	else
-		fd = open(l->str[++*i], O_RDONLY);
-	tmp = l->str;
-	if (tmp[2] != 0)
-	{
-		l->str = malloc(sizeof(char **) * (ft_splitlen(&tmp[1]) + 1));
-		while (tmp[++*i] != 0)
-			l->str[*i - 2] = ft_strdup(tmp[*i]);
-		l->str[*i - 2] = 0;
-	}
-	else
-		l->str = NULL;
-	ft_free_split(tmp);
-	return (fd);
-}
-
-int		ft_midr(t_cmd *l, t_data *data, int *i, int j)
-{
-	char **tmp;
-	int fd;
-
-	fd = 0;
-	if (l->str[(*i) + 1] == 0)
-	{
-		ft_free_split(l->str);
-		l->str = NULL;
-		data->exitstatu = 258;
-		return (fd);
-	}
-	if (j == 2)
-		fd = ft_heredoc(l->str[(*i) + 1]);
-	else
-		fd = open(l->str[(*i) + 1], O_RDONLY);
-	while (l->str[(*i)])
-	{
-		free (l->str[(*i)]);
-		if (l->str[(*i) + 1] && l->str[(*i) + 2])
-			l->str[(*i)] = ft_strdup(l->str[(*i) + 2]);
-		else
-			l->str[(*i)] = NULL;
-		(*i)++;
-	}
-	return (fd);
-}
-
-int		ft_getfile(t_cmd *l, t_data *data)
-{
-	int i;
-	int	fd;
-	char	**tmp;
-
-	i = -1;
-	fd = 0;
-	while (!fd && l->str && l->str[++i] != NULL)
-	{
-		if (!ft_strncmp(l->str[i], "<", 2) && i == 0 && l->str[1] != 0)
-			fd = ft_frstr(l, data, &i, 0);
-		else if (!ft_strncmp(l->str[i], "<<", 3) && i == 0 && l->str[1] != 0)
-			fd = ft_frstr(l, data, &i, 2);
-		else if (!ft_strncmp(l->str[i], "<", 2)	&& i != 0)
-			fd = ft_midr(l, data, &i, 0);
-		else if (!ft_strncmp(l->str[i], "<<", 3)	&& i != 0)
-			fd = ft_midr(l, data, &i, 2);
-	}
-	return (fd);
-}*/
-
-/*t_cmd	*ft_lstnewcmd(char *str, int fd0, int fd1, t_data *l)
-{
-	t_cmd	*elt;
-	int		i;
-
-	i = 0;
-	if (!(elt = (t_cmd *)malloc(sizeof(* elt))))
-		return (NULL);
-	ft_spaceskip(str, &i);
-	elt->str = ft_split(&str[i], ' ');
-	//envcheck(elt->str, l);
-	//elt->fd0 = ft_getfile(elt, l);
-	elt->in = fd0;
-	elt->out = fd1;
-	elt->next = NULL;
-	return (elt);
-}
-
-t_cmd	*ft_lastcmd(t_cmd *lst)
-{
-	while (lst)
-	{
-		if (!lst->next)
-			return (lst);
-		lst = lst->next;
-	}
-	return (lst);
-}
-
-void	ft_addcmd_back(t_cmd **alst, t_cmd *new)
-{
-	t_cmd	*last;
-
-	if (alst)
-	{
-		if (*alst)
-		{
-			last = ft_lastcmd(*alst);
-			last->next = new;
-		}
-		else
-			*alst = new;
-	}
-}
-
-t_cmd	*ft_freelstcmd(t_cmd *cmd)
-{
-	t_cmd	*tmp;
-
-	while (cmd)
-	{
-		tmp = cmd;
-		cmd = cmd->next;
-		free (tmp);
-	}
-	return (NULL);
-}
-
-
-t_cmd	*ft_addcmdlist(t_cmd **l, char *evn, int *x, t_data *data)
-{
-    char    **str;
-    int     i;
-    t_cmd  *tmp;
-
-	i = 0;
-	if (*l)
-		*l = ft_freelstcmd(*l);
-	str	= ft_split(evn, '|');
-	ft_addcmd_back(l, ft_lstnewcmd(str[i], 0, 1, data));
-    tmp = *l;
-	while (str[++i])
-		ft_addcmd_back(l, ft_lstnewcmd(str[i], 0, 1, data));
-	str = ft_free_split(str);
-	*x = i;
-	if (i > 556)
-		data->exitstatu = 128;
-	return (tmp);
-}*/
 
 //---------------------help-----------------------//
 
@@ -768,8 +177,8 @@ void    do_pwd(t_data *l, t_cmd *cmd)
 	{
 		ft_putstr_fd(str, cmd->out);
 		write(cmd->out, "\n", 1);
-		l->exitstatu = 0;
 	}
+	l->exitstatu = 0;
 }
 
 //----------------------env-------------------------//
@@ -784,7 +193,6 @@ void    do_env(t_data *data, t_cmd *cmd)
 	l = data->env;
 	if (cmd->str[1])
 	{
-		
 		data->exitstatu = 127;
 		return ;
 	}
@@ -888,30 +296,6 @@ void	ft_docd(t_data *data, t_cmd *cmd)
 }
 
 //----------------------export-------------------------//
-/*int	ft_memcmp(const void *s1, const void *s2, size_t n)
-{
-	unsigned char	*str1;
-	unsigned char	*str2;
-
-	str1 = (unsigned char*)s1;
-	str2 = (unsigned char*)s2;
-	while (n--)
-	{
-		if (!*str1 && *str2)
-			return (*str1 - *str2);
-		if (*str1 && !*str2)
-			return (*str1 - *str2);
-		if (*str1 != *str2)
-			return (*str1 - *str2);
-		str1++;
-		str2++;
-	}
-	if (strlen(s1) > strlen(s2))
-		return 1;
-	else if (strlen(s1) < strlen(s2))
-		return -1;
-	return (0);
-}*/
 
 t_env	*ft_smllst(t_list *env)
 {
@@ -939,7 +323,6 @@ t_env	*ft_getbiglst(t_list *tmp1, t_env *big)
 	char	*p;
 	t_env	*env;
 
-	tmp = NULL;
 	p = NULL;
 	if (big)
 		p = strdup(big->name);
@@ -982,8 +365,6 @@ void	ft_printsortlst(t_data	*data, t_cmd *cmd)
 			write(cmd->out, "\"", 1);
 		}
 		write(cmd->out, "\n", 1);
-		//if (!ft_strncmp(tmp->name, ft_smllst(data->env)->name, ft_strlen(tmp->name) + 1))
-		//	break ;
 	}
 }
 
@@ -1086,26 +467,23 @@ void	export_join(t_data *data, char **p)
 		addnewenv(p, data);
 }
 
-void	ft_lstupdate(t_data *data, char **str)
+void	ft_lstupdate(t_data *data, char **str,int j)
 {
 	int		i;
 	char	**p;
-	int		j;
 
 	i = 0;
+	data->exitstatu = 1;
 	while (str[++i])
 	{
 		j = ft_findc(str[i], '=');
-			p = mycatstr(str[i], j);
+		p = mycatstr(str[i], j);
 		if (!ft_isalpha(str[i][0]) && str[i][0] != '_')
 			data->exitstatu = 1;
 		else if (j)
 		{
 			if (ft_strchr(p[0], '+'))
-			{
-				data->exitstatu = 1;
 				return ;
-			}
 			if (str[i][j - 1] == '+')
 				export_join(data, p);
 			else
@@ -1128,7 +506,7 @@ void	do_export(t_data *data, t_cmd *cmd)
 	if (!str[1])
 		ft_printsortlst(data, cmd);
 	else
-		ft_lstupdate(data, str);
+		ft_lstupdate(data, str, 0);
 }
 
  /*************************unset*******************************/
@@ -1207,8 +585,10 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	char	i;
 	char	**p;
 
-	p = cmd->str;
 	i = data->exitstatu;
+	if (cmd == NULL)
+		exit (i);
+	p = cmd->str;
 	if (p[1] && p[2])
 	{
 		data->exitstatu = 1;
@@ -1221,46 +601,6 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 }
 
    /*************************exec*******************************/
-
-/*char	*ft_getabspath(char *path, char **tmp)
-{
-	int		i;draganov pettas
-	char	*cmd;
-	char	**p;
-	int		fd;
-
-	i = -1;
-	cmd = NULL;
-	p = ft_split(path, ':');
-	while (p[++i])
-	{
-		cmd = ft_mystrjoin(p[i], tmp[0]);
-		fd = open(cmd, O_RDONLY);
-		if (fd > 0)
-			break ;
-		close(fd);
-		free(cmd);
-	}
-	ft_free_split(p);
-	close(fd);
-	return (cmd);
-}*/
-
-/*void	ft_free_cmd(t_data *data)
-{
-	t_cmd	*cmd;
-	t_cmd	*tmp;
-
-	cmd = data->cmd;
-	while (cmd)
-	{
-		ft_free_split(cmd->str);
-		tmp = cmd;
-		cmd = cmd->next;
-		free (tmp);
-	}
-	data->cmd = NULL;
-}*/
 
 void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 {
@@ -1284,7 +624,7 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 			dup2(cmd->out, 1);
         }
         execve(cmd->cmd, cmd1, NULL);
-		perror("shell");
+		ft_putstr_fd("yoo: command not found\n", 2);
 		exit(127);
 	}
 }
@@ -1294,8 +634,8 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 void    ft_check(t_data *l, t_cmd *cmd)
 {
     char *str;
-
-	if (!cmd->str)
+	
+	if (!cmd->cmd || !cmd->str)
 		return ;
     else if(!strncmp(cmd->str[0], "help", 5))
         do_help();
@@ -1356,7 +696,6 @@ void	mlpipe(t_data *data)
 			printf("error : fork failed");
 		else if (pid == 0)
 		{
-            //ft_putnbr_fd(i, 2);
 			execdup(data, fds, i, fd);
 			ft_check(data, ft_findcmd(data->cmd_list, i));
 			exit(data->exitstatu);
@@ -1419,31 +758,27 @@ int		main(int argc, char **argv, char **env)
 
 	g_data = malloc(sizeof(t_data));
 	init_env_list(env);
-	g_data->numcmd = 0;
 	argc = 0;
 	argv = NULL;
+	signal(SIGQUIT, sig_handler);
 	while (1)
 	{
 		g_data->tokkens = NULL;
 		g_data->cmd_list = NULL;
-		signal(SIGINT, my_int);
+		signal(SIGINT, sig_handler);
 		if (!(g_data->line = readline("ader🤡$>")))
 	    	return (1);
 		if (g_data->line[0])
 		{
 			parser();
-			//print_cmd();
-			//excute_cmd();
-			//print_tokkens();
 			if (g_data->numcmd == 1)
 				ft_check(g_data, g_data->cmd_list->content);
 			else if (g_data->numcmd < 557)
 				mlpipe(g_data);
 			add_history(g_data->line);
 			//free_nodes_cmd(g_data->cmd_list);
-			free_functio();
+			//free_functio();
 		}
-		// check_words(tmp);
 	}
 	return (0);
 }

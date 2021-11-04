@@ -40,7 +40,7 @@ typedef struct s_env
 {
 	char			*name;
 	char			*content;
-}               t_env;
+}	           t_env;
 
 
 typedef struct s_cl
@@ -75,7 +75,6 @@ typedef struct s_data
 	char	*line;
 	int		exitstatu;
 	int		numcmd;
-
 }				t_data;
 
 t_data		*g_data;
@@ -94,7 +93,7 @@ t_type	*expander(t_type *tmp);
 int     real_character(char *line, int i, char c);
 t_type	*ft_lstnew_type(char *content, int i, int b);
 void	ft_lstadd_back_type(t_type **alst, t_type *new);
-void    check_words(t_type *tmp);
+int		check_words(t_type *tmp);
 char	*make_string(char *str, char c);
 int     real_character1(char *line, int i, char c);
 char	*return_env_value(char *key);
@@ -123,11 +122,49 @@ t_type	*ft_lstlast_type(t_type *type);
 t_type	*ft_lstnew_type2(char *content, int i, int a);
 void	add_tab_to_ll(t_type **head, char *str, int type, int a);
 t_list	*fill_list(size_t *i, char c);
-void    log_error(char *s);
-void    syntax_error();
+void	log_error(char *s);
+void	syntax_error();
 void	free_functio();
-char    **ft_free_split(char **d);
+char	**ft_free_split(char **d);
 void	free_nodes_cmd(t_list	*tmp);
-char    **ft_print_split(char **d);
-
+char	**ft_print_split(char **d);
+int	 	is_redirection(int i);
+char	*get_sq_word(t_type *types, int j, int *f);
+void	ft_exit(t_cmd *cmd, t_data *data);
+void	sig_handler(int sig);
+void	ft_error(char *p, int i);
+int		ft_spaceskip(char *line, int *i);
+int		ft_cmp(char *s1, char *s2);
+int		ft_splitlen(char **p);
+char	**ft_free_split(char **d);
+char	**ft_print_split(char **d);
+t_env	*ft_lstfind(t_list *lst, char *name);
+t_cmd	*ft_findcmd(t_list *data, int id);
+void	do_help(void);
+void	do_echo(t_data *data, t_cmd *cmd);
+void	do_pwd(t_data *l, t_cmd *cmd);
+void	do_env(t_data *data, t_cmd *cmd);
+void	change_oldpwd(t_data *data);
+void	change_pwd(t_data *data);
+void	ft_docdret(t_data *data);
+void	ft_docdsing(t_data *data);
+void	ft_docd(t_data *data, t_cmd *cmd);
+t_env	*ft_smllst(t_list *env);
+t_env	*ft_getbiglst(t_list *tmp1, t_env *big);
+void	ft_printsortlst(t_data	*data, t_cmd *cmd);
+int		ft_findc(char *str, char c);
+t_env	*ft_lstnewenv(char *name, char *str);
+void	addnewenv(char	**p, t_data *data);
+char	**mycatstr(char *str, int i);
+void	export_join(t_data *data, char **p);
+void	ft_lstupdate(t_data *data, char **str,int j);
+void	do_export(t_data *data, t_cmd *cmd);
+void	ft_deletlst(char *name, t_list *env);
+void	do_unset(t_data *data, t_cmd *cmd);
+int		ft_myatoi(char *str);
+void	ft_exit(t_cmd *cmd, t_data *data);
+void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd);
+void	ft_check(t_data *l, t_cmd *cmd);
+void	execdup(t_data *data, int *fds, int x, int fd);
+void	mlpipe(t_data *data);
 #endif

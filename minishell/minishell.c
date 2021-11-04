@@ -1,23 +1,21 @@
 #include "minishell.h"
-
+// dans cette fonction je retourne une liste des fichier et je remplis args_list avec les arguments
 t_list	*get_args(t_list **args ,t_type	*types, t_cmd **cmd)
 {
 	t_type	*tmp;
 	t_list	*list_files;
-	int		i;
 
 	tmp = types;
-	i = 0;
 	list_files = NULL;
 	while (tmp)
 	{
-		if (tmp->type == 4 || tmp->type == 3 || tmp->type == 5 || tmp->type == 6)
+		if (is_redirection(tmp->type) && tmp->next && !is_redirection(tmp->next->type))
 			ft_lstadd_back(&list_files, ft_lstnew(tmp->next->word));
-		if (tmp->type != 4 && tmp->type != 3 && tmp->type != 5 && tmp->type != 6)
+		if (!is_redirection(tmp->type))
 		{
 			if (tmp->prev != NULL)
 			{
-				if (tmp->prev->type != 4 && tmp->prev->type != 3 && tmp->prev->type != 5 && tmp->prev->type != 6)
+				if (!is_redirection(tmp->prev->type))
 					help_args(&tmp, args);
 			}
 			else
@@ -26,14 +24,6 @@ t_list	*get_args(t_list **args ,t_type	*types, t_cmd **cmd)
 		tmp = tmp->next;
 	}
 	(*cmd)->str = ll_to_dp(*args);
-	//while ((*cmd)->str[i])
-		//printf(">>>>>%s\n", (*cmd)->str[i++]);
-	// t_list *list = *args;
-	// while (list)
-	// {
-	// 	printf("tt = %s\n", (char *)(list)->content);
-	// 	list = (list)->next;
-	// }
 	return (list_files);
 }
 
@@ -66,27 +56,26 @@ void	get_in(int *i, t_list *list_files, t_type *expanded_types)
 {
 	*i = 0;
 	char	*s;
+
+	s = NULL;
 	if (list_files)
 	{
 		expanded_types = expanded_types->next;
 		while (expanded_types)
 		{
-			// printf("file_out is = %s %d\n", expanded_types->word, expanded_types->type);
-			if (expanded_types->prev->type == 5)
+			if (expanded_types->prev->type == 5 && (is_redirection(expanded_types->type) == 0))
 			{
 				s = expanded_types->word;
-				//printf("file_in %s\n", expanded_types->word);
 				*i = ft_heredoc(expanded_types->word);
 			}
-			else if (expanded_types->prev->type == 6)
+			else if (expanded_types->prev->type == 6 && (is_redirection(expanded_types->type) == 0))
 			{
 				s = expanded_types->word;
-				//printf("%s\n", expanded_types->word);
 				*i = open(expanded_types->word, O_RDONLY);
 			}	
 			expanded_types = expanded_types->next;
 		}
-		//printf("file_in is = %s\n", s);
+		printf("file_in is = %s\n", s);
 	}
 }
 
@@ -100,68 +89,67 @@ void	get_out(int *i, t_list *list_files, t_type *expanded_types)
 		expanded_types = expanded_types->next;
 		while (expanded_types)
 		{
-		//s = ft_lstlast(list_files)->content;
-		//while (strcmp(expanded_types->word, s) != 0)
 			s = expanded_types->word;
-			if (expanded_types->prev->type == 4)
+			if (expanded_types->prev->type == 4 && (is_redirection(expanded_types->type) == 0))
 				*i = open(s, O_WRONLY | O_CREAT | O_TRUNC , 0777);  ///hadi asat ra kant khasra mhm ra 9aditha
-			else if (expanded_types->prev->type == 3)
+			else if (expanded_types->prev->type == 3 && (is_redirection(expanded_types->type) == 0))
 				*i = open(s, O_WRONLY | O_CREAT | O_APPEND , 0777);
 			expanded_types = expanded_types->next;
 		}
-		/*while (list_files)
-		{
-			printf("file_out is = %s\n", list_files->content);
-			if (ft_strncmp(s, list_files->content, strlen(s) + 1) != 0)
-				open(list_files->content, O_WRONLY | O_CREAT | O_TRUNC , 0777);
-			list_files = list_files->next;
-		}*/
 	}
 }
-// > file echo sdsd > file2
-// echo "$PATH"dfgd
+
+// verifier s'il y'a un genre de redirection au debut de la commande, si oui :
+// je distingue les operations selon la longueur de la commande
 void	get_command(t_type *tmp2, char *str, t_cmd **cmd, t_type **expanded_types)
 {
-	t_type	*tmp;
-
-	tmp = tmp2;
-	if (tmp2->type == 4 || tmp2->type == 3 || tmp2->type == 5 || tmp2->type == 6)
+	if (!tmp2)
+		return ;
+	if (is_redirection(tmp2->type))
 	{
-		if (ft_lstsize_type(tmp2) == 2)
+		if (ft_lstsize_type(tmp2) == 2) // cmd = " "
 			(*cmd)->cmd = ft_strdup("");
-		else if (ft_lstsize_type(tmp2) == 3)
+		else if (ft_lstsize_type(tmp2) == 3) // j'affecte le troisieme elment a cmd;
 		{
 			str = get_node(tmp2)->word;
 			(*cmd)->cmd = get_cmd_path(str, g_data->env);
 		}
 		else
 		{
-			while(tmp->type == 4 || tmp->type == 3 || tmp2->type == 5 || tmp2->type == 6)
-				tmp = tmp->next->next;
-			(*cmd)->cmd = get_cmd_path(tmp->word, g_data->env);
+			while(is_redirection(tmp2->type))
+				tmp2 = tmp2->next->next; // je pointe apres le fichier et je verifie s'il y'a une commande ou bien une autre directive de redirection
+			(*cmd)->cmd = get_cmd_path(tmp2->word, g_data->env);
 		}
 	}
 	else if (tmp2->type == 0)
-		(*cmd)->cmd = get_cmd_path((*expanded_types)->word, g_data->env);
+		(*cmd)->cmd = get_cmd_path((*expanded_types)->word, g_data->env); // la commande doit etre la premiere
+}
+
+// loup sur g_data->tokkens, pour remplir la structure t_cmd et j'ajoute cette derniere dans l'arriere de g_data->cmd_list
+void	init_cmd(t_cmd *cmd)
+{
+	cmd->cmd = NULL;
+	cmd->str = NULL;
+	cmd->in = 0;
+	cmd->out = 1;
 }
 
 void	expand_cmdlist(t_list *tmp, char *str)
 {
 	t_cmd	*cmd;
-	t_type	*expanded_types;
-	int		i;
+	t_type	*expanded_types; //katakhed nodes dyal list tmp fihom types m2expandyin
 	t_list	*list_files;
-	t_type	*tmp2;
+	t_type	*tmp2; // katpointer eela content dyal list tmp li fiha types.
+	int		i;
 
 	i = 0;
 	while (tmp)
 	{
 		i++;
 		tmp2 = tmp->content;
-		// printf("ici = %s|\n", tmp2->word);
 		expanded_types = expander(tmp->content);
-		//print_types(expanded_types);
 		cmd = malloc(sizeof(t_cmd));
+		init_cmd(cmd);
 		get_command(tmp2, str, &cmd, &expanded_types);
 		cmd->args_list = NULL;
 		list_files = get_args(&(cmd->args_list), expanded_types, &cmd);
@@ -169,7 +157,6 @@ void	expand_cmdlist(t_list *tmp, char *str)
 		get_in(&(cmd->in), list_files, expanded_types);
 		ft_lstadd_back(&g_data->cmd_list, ft_lstnew(cmd));
 		tmp = tmp->next;
-		//printf("--------------------\n");
 	}
 	g_data->numcmd = i;
 }
@@ -197,3 +184,33 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	return (0);
 }*/
 
+int		main(int argc, char **argv, char **env)
+{
+	char **p;
+
+	g_data = malloc(sizeof(t_data));
+	init_env_list(env);
+	argc = 0;
+	argv = NULL;
+	signal(SIGQUIT, sig_handler);
+	while (1)
+	{
+		g_data->tokkens = NULL;
+		g_data->cmd_list = NULL;
+		signal(SIGINT, sig_handler);
+		if (!(g_data->line = readline("ader🤡$>")))
+	    	return (1);
+		if (g_data->line[0])
+		{
+			parser();
+			if (g_data->numcmd == 1)
+				ft_check(g_data, g_data->cmd_list->content);
+			else if (g_data->numcmd < 557)
+				mlpipe(g_data);
+			add_history(g_data->line);
+			//free_nodes_cmd(g_data->cmd_list);
+			//free_functio();
+		}
+	}
+	return (0);
+}

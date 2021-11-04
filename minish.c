@@ -6,34 +6,23 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 18:09:01 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/04 18:56:20 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*int		ft_putstr_fd(char *s, int fd)
+static void	sig_handler(int sig)
 {
-	int	i;
-
-	i = 0;
-	fd = 0;
-	while (s[i] != '\0')
-		write(1, &s[i++], 1);
-	return (i);
-}*/
-
-static void	my_inti(int ret)
-{
-	ft_exit(NULL, g_data);
-}
-
-static void	my_int(int ret)
-{
-	ft_putstr_fd("\nyoo$> ", 1);
-	printf("%d\n", ret);
-	g_data->exitstatu = 130;
+	if (sig == SIGINT)
+	{
+		write(2, "\n", 1);
+		ft_putstr_fd("yoo$> ", 2);
+	}
+	else if (sig == SIGQUIT)
+	{
+		ft_exit(NULL, g_data);
+	}
 }
 
 void	ft_error(char *p, int i)
@@ -337,7 +326,6 @@ t_env	*ft_getbiglst(t_list *tmp1, t_env *big)
 	char	*p;
 	t_env	*env;
 
-	tmp = NULL;
 	p = NULL;
 	if (big)
 		p = strdup(big->name);
@@ -482,26 +470,23 @@ void	export_join(t_data *data, char **p)
 		addnewenv(p, data);
 }
 
-void	ft_lstupdate(t_data *data, char **str)
+void	ft_lstupdate(t_data *data, char **str,int j)
 {
 	int		i;
 	char	**p;
-	int		j;
 
 	i = 0;
+	data->exitstatu = 1;
 	while (str[++i])
 	{
 		j = ft_findc(str[i], '=');
-			p = mycatstr(str[i], j);
+		p = mycatstr(str[i], j);
 		if (!ft_isalpha(str[i][0]) && str[i][0] != '_')
 			data->exitstatu = 1;
 		else if (j)
 		{
 			if (ft_strchr(p[0], '+'))
-			{
-				data->exitstatu = 1;
 				return ;
-			}
 			if (str[i][j - 1] == '+')
 				export_join(data, p);
 			else
@@ -524,7 +509,7 @@ void	do_export(t_data *data, t_cmd *cmd)
 	if (!str[1])
 		ft_printsortlst(data, cmd);
 	else
-		ft_lstupdate(data, str);
+		ft_lstupdate(data, str, 0);
 }
 
  /*************************unset*******************************/
@@ -714,7 +699,6 @@ void	mlpipe(t_data *data)
 			printf("error : fork failed");
 		else if (pid == 0)
 		{
-            //ft_putnbr_fd(i, 2);
 			execdup(data, fds, i, fd);
 			ft_check(data, ft_findcmd(data->cmd_list, i));
 			exit(data->exitstatu);
@@ -779,31 +763,25 @@ int		main(int argc, char **argv, char **env)
 	init_env_list(env);
 	argc = 0;
 	argv = NULL;
+	signal(SIGQUIT, sig_handler);
 	while (1)
 	{
 		g_data->tokkens = NULL;
 		g_data->cmd_list = NULL;
-		signal(SIGINT, my_int);
-		//signal(SIGKILL, my_inti);
+		signal(SIGINT, sig_handler);
 		if (!(g_data->line = readline("ader🤡$>")))
 	    	return (1);
 		if (g_data->line[0])
 		{
 			parser();
-			//print_cmd();
-			//excute_cmd();
-			//print_tokkens();
 			if (g_data->numcmd == 1)
 				ft_check(g_data, g_data->cmd_list->content);
 			else if (g_data->numcmd < 557)
 				mlpipe(g_data);
 			add_history(g_data->line);
 			//free_nodes_cmd(g_data->cmd_list);
-			free_functio();
+			//free_functio();
 		}
-		else
-			g_data->exitstatu = 0;
-		// check_words(tmp);
 	}
 	return (0);
 }

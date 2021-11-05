@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:56:06 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 20:02:59 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 11:44:08 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ void	ft_error(char *p, int i)
 	exit (i);
 }
 
-int		ft_spaceskip(char *line, int *i)
+int	ft_spaceskip(char *line, int *i)
 {
 	while ((line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
-	|| (line[*i] == '\r' || line[*i] == '\v' || line[*i] == '\f'))
+		|| (line[*i] == '\r' || line[*i] == '\v' || line[*i] == '\f'))
 		(*i)++;
 	return (1);
 }
 
 int	ft_cmp(char *s1, char *s2)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s2[i])

@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 20:08:15 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 20:09:19 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 11:59:13 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	do_echo(t_data *data, t_cmd *cmd)
 	j = 0;
 	while (!ft_strncmp(str[++i], "-n", 3))
 		j = 1;
-	while(str[i])
+	while (str[i])
 	{
 		write(cmd->out, str[i], strlen(str[i]));
 		if (str[++i])

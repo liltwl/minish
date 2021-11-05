@@ -6,23 +6,23 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:49:54 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 19:57:22 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 11:44:31 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		ft_splitlen(char **p)
+int	ft_splitlen(char **p)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (p[i])
 		i++;
 	return (i);
 }
- 
-char    **ft_free_split(char **d)
+
+char	**ft_free_split(char **d)
 {
 	int				i;
 
@@ -39,7 +39,7 @@ char    **ft_free_split(char **d)
 	return (NULL);
 }
 
-char    **ft_print_split(char **d)
+char	**ft_print_split(char **d)
 {
 	int				i;
 
@@ -54,9 +54,9 @@ char    **ft_print_split(char **d)
 	return (NULL);
 }
 
-t_env		*ft_lstfind(t_list *lst, char *name)
+t_env	*ft_lstfind(t_list *lst, char *name)
 {
-	t_env *env;
+	t_env	*env;
 
 	while (lst)
 	{

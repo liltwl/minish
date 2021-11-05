@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:49:50 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 19:57:40 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 12:00:51 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	addnewenv(char	**p, t_data *data)
 			env = ft_lstnewenv(p[0], p[1]);
 		else
 			env = ft_lstnewenv(p[0], "");
-		tmp = ft_lstlast(data->env)->content;  // hadi waaa9ila makaynach
+		tmp = ft_lstlast(data->env)->content;
 		ft_lstadd_back(&data->env, ft_lstnew((void *)env));
 	}
 }
@@ -86,7 +86,7 @@ void	export_join(t_data *data, char **p)
 		addnewenv(p, data);
 }
 
-void	ft_lstupdate(t_data *data, char **str,int j)
+void	ft_lstupdate(t_data *data, char **str, int j)
 {
 	int		i;
 	char	**p;

@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:54:51 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 19:57:18 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 12:05:25 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ t_env	*ft_getbiglst(t_list *tmp1, t_env *big)
 	while (tmp1)
 	{
 		env = (t_env *)tmp1->content;
-		if ((ft_memcmp(c, env->name, strlen(c) + 1) > 0 && !p)||
-			((p && ft_memcmp(p, env->name, strlen(env->name) + 1) < 0)
-			&& ft_memcmp(c, env->name, strlen(env->name) + 1) > 0))
+		if ((ft_memcmp(c, env->name, strlen(c) + 1) > 0 && !p)
+			|| ((p && ft_memcmp(p, env->name, strlen(env->name) + 1) < 0)
+				&& ft_memcmp(c, env->name, strlen(env->name) + 1) > 0))
 		{
 			tmp = env;
 			free (c);
@@ -101,7 +101,8 @@ t_env	*ft_lstnewenv(char *name, char *str)
 {
 	t_env	*elt;
 
-	if (!(elt = (t_env *)malloc(sizeof(* elt))))
+	elt = (t_env *)malloc(sizeof(*elt));
+	if (!(elt))
 		return (NULL);
 	elt->name = ft_strdup(name);
 	elt->content = ft_strdup(str);

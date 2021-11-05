@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:47:39 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 19:57:43 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 12:04:40 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	ft_deletlst(char *name, t_list *env)
 	free ((env));
 }
 
-
 void	do_unset(t_data *data, t_cmd *cmd)
 {
 	int		i;
@@ -51,5 +50,4 @@ void	do_unset(t_data *data, t_cmd *cmd)
 	while (str[++i])
 		ft_deletlst(str[i], data->env);
 	data->exitstatu = 0;
- }
- 
+}

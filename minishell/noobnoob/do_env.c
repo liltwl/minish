@@ -6,13 +6,13 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:52:55 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/04 19:57:27 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/05 12:02:22 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void    do_env(t_data *data, t_cmd *cmd)
+void	do_env(t_data *data, t_cmd *cmd)
 {
 	t_list	*l;
 	t_env	*env;
@@ -23,21 +23,21 @@ void    do_env(t_data *data, t_cmd *cmd)
 		data->exitstatu = 127;
 		return ;
 	}
-    while(l != NULL)
-    {
+	while (l != NULL)
+	{
 		env = l->content;
-        ft_putstr_fd(env->name, cmd->out);
-        write(cmd->out, "=", 1);
-        ft_putstr_fd(env->content, cmd->out);
-        write(cmd->out, "\n", 1);
-        l = l->next;
-    }
+		ft_putstr_fd(env->name, cmd->out);
+		write(cmd->out, "=", 1);
+		ft_putstr_fd(env->content, cmd->out);
+		write(cmd->out, "\n", 1);
+		l = l->next;
+	}
 	data->exitstatu = 0;
 }
 
-void    do_pwd(t_data *l, t_cmd *cmd)
+void	do_pwd(t_data *l, t_cmd *cmd)
 {
-    t_env  *tmp;
+	t_env	*tmp;
 	char	*str;
 
 	str = getcwd(NULL, 0);

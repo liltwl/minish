@@ -3,52 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:34:36 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/10/30 00:34:41 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/06 16:33:29 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*my_ft_strjoin(char const *s1, char const *s2)
-{
-	char	*p;
-	int		i;
-	int		j;
+// char	*my_ft_strjoin(char const *s1, char const *s2)
+// {
+// 	char	*p;
+// 	int		i;
+// 	int		j;
 
-	i = ft_strlen((char *)s1);
-	j = ft_strlen((char *)s2);
-	p = malloc(i + j + 2);
-	if (!(p))
-		return (0);
-	ft_strcpy(p, (char *)s1);
-	ft_strcpy(&p[i], "/");
-	ft_strcpy(&p[i + 1], (char *)s2);
-	return (p);
-}
+// 	i = ft_strlen((char *)s1);
+// 	j = ft_strlen((char *)s2);
+// 	p = malloc(i + j + 2);
+// 	if (!(p))
+// 		return (0);
+// 	ft_strcpy(p, (char *)s1);
+// 	ft_strcpy(&p[i], "/");
+// 	ft_strcpy(&p[i + 1], (char *)s2);
+// 	return (p);
+// }
 
-char	*get_absolute_path(char **path, char *str)
-{
-	int		i;
-	int		fd;
-	char	*cmd;
+// char	*get_absolute_path(char **path, char *str)
+// {
+// 	int		i;
+// 	int		fd;
+// 	char	*cmd;
 
-	i = 0;
-	cmd = NULL;
-	while (path[i])
-	{
-		cmd = my_ft_strjoin(path[i], str);
-		fd = open(cmd, O_RDONLY);
-		if (fd > 0)
-			break ;
-		close(fd);
-		i++;
-	}
-	close(fd);
-	return (cmd);
-}
+// 	i = 0;
+// 	while (path[i])
+// 	{
+// 		cmd = my_ft_strjoin(path[i], str);
+// 		fd = open(cmd, O_RDONLY);
+// 		if (fd > 0)
+// 			return (cmd);
+// 		free(cmd);
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
 
 void	free_dpointer(char	**tokkens)
 {
@@ -62,6 +60,32 @@ void	free_dpointer(char	**tokkens)
 	}
 	free(tokkens);
 }
+char	*get_absolute_path(char **pa, char *cmd)
+{
+	int			i;
+	char		*str;
+	char		*tmp;
+	int			fd;
+
+	i = 0;
+	fd = open(cmd, O_RDONLY);
+	if (fd > 0)
+		return (ft_strdup(cmd));
+	while (pa[i])
+	{
+		str = ft_strjoin(pa[i], "/");
+		tmp = str;
+		str = ft_strjoin(tmp, cmd);
+		free(tmp);
+		fd = open(str, O_RDONLY);
+		if (fd > 0)
+			return (str);
+		free(str);
+		i++;
+	}
+	return (0);
+}
+
 
 char	*get_cmd_path(char *str, t_list *env)
 {
@@ -80,6 +104,7 @@ char	*get_cmd_path(char *str, t_list *env)
 	}
 	path = ft_split(cmd, ':');
 	str = get_absolute_path(path, str);
+	free_table(path);
 	// free_dpointer(path);
 	return (str);
 }

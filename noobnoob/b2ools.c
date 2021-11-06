@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:56:06 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/05 11:44:08 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/06 16:12:00 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,17 @@
 
 void	sig_handler(int sig)
 {
+	char p;
+
+	p = 3;
 	if (sig == SIGINT)
 	{
-		write(2, "\n", 1);
-		ft_putstr_fd("yoo$> ", 2);
+		if(g_data->line)
+			free(g_data->line);
+		//write(1, "\n", 1);
+		ft_putchar_fd('\n', 1);
+		ft_putstr_fd("yoo$> ", 1);
+		//signal(SIGINT, sig_handler);
 	}
 }
 

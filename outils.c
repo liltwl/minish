@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:19:25 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/10/29 17:31:33 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/05 05:23:07 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*make_string(char *str, char c)
 	size_t		i;
 	char	*p;
 	i = 0;
-	
+
 	if (str == NULL)
 	{
 		p = strdup("");
@@ -74,20 +74,20 @@ void	add_tab_to_ll(t_type **head, char *str, int type, int a)
 	}
 }
 
-void	free_nodes_types(t_type	**tmp)
-{
-	t_type	*tmp2;
-	//tmp2 = *tmp;
-	//print_types(*tmp);
-	while (*tmp)
-	{
-		tmp2 = *tmp;
-		*tmp = (*tmp)->next;
-		if (tmp2->word != NULL)
-			free(tmp2->word);
-		free(tmp2);
-	}
-}
+// void	free_nodes_types(t_type	**tmp)
+// {
+// 	t_type	*tmp2;
+// 	//tmp2 = *tmp;
+// 	//print_types(*tmp);
+// 	while (*tmp)
+// 	{
+// 		tmp2 = *tmp;
+// 		*tmp = (*tmp)->next;
+// 		if (tmp2->word != NULL)
+// 			free(tmp2->word);
+// 		free(tmp2);
+// 	}
+// }
 void	free_nodes_env(t_list	**tmp)
 {
 	t_env	*tmp2;

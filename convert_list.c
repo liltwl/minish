@@ -4,9 +4,8 @@ char *ll_to_string(t_list *head)
 {
     char    *str;
     int     len;
+    int     i;
 
-    int i;
-    
     i = 0;
     len = ft_lstsize(head);
     str = malloc(len + 1);

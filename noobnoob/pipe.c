@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:44:48 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/06 08:45:08 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/06 11:47:38 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 	{
 		dup2(cmd->in, 0);
 		dup2(cmd->out, 1);
-		execve(cmd->cmd, cmd1, NULL);
+		execve(cmd->cmd, cmd1, NULL); //env
 		ft_putstr_fd("yoo: command not found\n", 2);
 		exit(127);
 	}
@@ -39,6 +39,7 @@ void	ft_check(t_data *l, t_cmd *cmd)
 {
 	char	*str;
 
+	printf("%s\n", cmd->cmd);
 	if (!cmd->cmd || !cmd->str)
 		return ;
 	else if (!strncmp(cmd->str[0], "help", 5))
@@ -93,7 +94,7 @@ void	ft_exitstatu(int *fd, int *fds, t_data *data, pid_t pid)
 void	mlpipe(t_data *data)
 {
 	int		fds[2];
-	pid_t	pid;
+	pid_t	pid[data->exitstatu];
 	int		i;
 	int		fd;
 
@@ -102,18 +103,18 @@ void	mlpipe(t_data *data)
 	while (++i < data->numcmd)
 	{
 		pipe(fds);
-		pid = fork();
-		if (pid == 0)
+		pid[i] = fork();
+		if (pid[i] == 0)
 		{
 			execdup(data, fds, i, fd);
 			ft_check(data, ft_findcmd(data->cmd_list, i));
 			exit(data->exitstatu);
 		}
-		ft_exitstatu(&fd, fds, data, pid);
+		ft_exitstatu(&fd, fds, data, pid[i]);
 	}
 	close (fd);
 	i = -1;
 	while (++i < data->numcmd)
-		wait(&data->exitstatu);
+		waitpid(pid[i], &data->exitstatu, 0);
 	data->exitstatu = WEXITSTATUS(data->exitstatu);
 }

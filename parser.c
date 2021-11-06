@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:48:20 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/04 00:17:07 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/05 06:38:18 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 // echo $"$'hf$PWD'gh"hfh
 
-t_type	*function(t_type *type, int dblq, int single, size_t i)
+t_type	*function(int dblq, int single, size_t i)
 {
+	t_type *type;
+
+	type = NULL;
 	while (1)
 	{
 		if (g_data->line[i] == '\'' && single == 0 && dblq == 0)
@@ -46,19 +49,16 @@ t_type	*function(t_type *type, int dblq, int single, size_t i)
 void	parser(void)
 {
 	t_type	*type;
-	t_type	*tmp;
 	t_list	*tmp1;
 	char 	*str;
-	
+
 	str = NULL;
-	type = NULL;
-	tmp = function(type, 0, 0, 0);
-	if (tmp)
-	{
-		ft_lstadd_back(&g_data->tokkens, ft_lstnew(tmp));
-		tmp = NULL;
-	}
+
+	type = function(0, 0, 0);
+	if (type)
+		ft_lstadd_back(&g_data->tokkens, ft_lstnew(type));
 	tmp1 = g_data->tokkens;
 	syntax_error(tmp1);
 	expand_cmdlist(tmp1, str);
+	ft_lstclear(&g_data->tokkens, &free_type);
 }

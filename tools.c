@@ -36,7 +36,7 @@ void	ft_lstadd_back_type(t_type **alst, t_type *new)
     }
 	else
     {
-         while (last->next != NULL)
+        while (last->next != NULL)
             last = last->next;
         last->next  = new;
         new->prev = last;

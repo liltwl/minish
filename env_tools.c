@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+
+
 void	init_env_list(char **envp)
 {
 	int		i;
@@ -13,7 +15,6 @@ void	init_env_list(char **envp)
 	a->name = s[0];
 	a->content = s[1];
 	env = ft_lstnew(a);
-	free(s);
 	while (envp[i])
 	{
 		s = ft_split(envp[i], '=');

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 20:10:02 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/04 16:20:35 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/06 16:48:45 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void    log_error(char *s)
 {
 	ft_putstr(s);
 	g_data->exitstatu = 258;
+	g_data->syntx = 1;
 }
 
 int     is_redirection(int i)
@@ -82,7 +83,7 @@ int		check_words(t_type *tmp)
 	}
 	while (g_data->line[++i] && g_data->line[i] == ' ')
 		i++;
-	if (g_data->line[i - 1] == '|')
+	if (g_data->line[i] == '|' || g_data->line[i - 1] == '|')
 		return (0);
 	tmp2 = tmp;
 	while (tmp2)
@@ -108,6 +109,8 @@ void    syntax_error(t_list *types)
 			log_error("syntax_error\n");
 			return ;
 		}
+		else
+			g_data->syntx = 0;
 		types = types->next;
 	}
 	str = g_data->line;

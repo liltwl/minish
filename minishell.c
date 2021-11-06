@@ -130,6 +130,7 @@ void	init_cmd(t_cmd *cmd)
 {
 	cmd->cmd = NULL;
 	cmd->str = NULL;
+	cmd->args_list = NULL;
 	cmd->in = 0;
 	cmd->out = 1;
 }
@@ -143,6 +144,11 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	int		i;
 
 	i = 0;
+	if (g_data->syntx == 1)
+	{
+		cmd = NULL;x
+		return ;
+	}
 	while (tmp)
 	{
 		i++;
@@ -151,11 +157,11 @@ void	expand_cmdlist(t_list *tmp, char *str)
 		cmd = malloc(sizeof(t_cmd));
 		init_cmd(cmd);
 		get_command(tmp2, str, &cmd, &expanded_types);
-		cmd->args_list = NULL;
 		list_files = get_args(&(cmd->args_list), expanded_types, &cmd);
 		get_out(&(cmd->out), list_files, expanded_types);
 		get_in(&(cmd->in), list_files, expanded_types);
 		ft_lstadd_back(&g_data->cmd_list, ft_lstnew(cmd));
+		free_nodes_types(&expanded_types);
 		tmp = tmp->next;
 	}
 	g_data->numcmd = i;
@@ -184,33 +190,3 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	return (0);
 }*/
 
-int		main(int argc, char **argv, char **env)
-{
-	char **p;
-
-	g_data = malloc(sizeof(t_data));
-	init_env_list(env);
-	argc = 0;
-	argv = NULL;
-	signal(SIGQUIT, sig_handler);
-	while (1)
-	{
-		g_data->tokkens = NULL;
-		g_data->cmd_list = NULL;
-		signal(SIGINT, sig_handler);
-		if (!(g_data->line = readline("ader🤡$>")))
-	    	return (1);
-		if (g_data->line[0])
-		{
-			parser();
-			if (g_data->numcmd == 1)
-				ft_check(g_data, g_data->cmd_list->content);
-			else if (g_data->numcmd < 557)
-				mlpipe(g_data);
-			add_history(g_data->line);
-			//free_nodes_cmd(g_data->cmd_list);
-			//free_functio();
-		}
-	}
-	return (0);
-}

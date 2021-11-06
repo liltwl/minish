@@ -17,7 +17,9 @@ void	add_in(size_t *i, char c, t_type **head)
 	}
 	(*i)--;
 	str = ll_to_string(list);
+	ft_lstclear(&list, &free_char);
 	k = ft_strlen(str);
+	printf(">>%s\n", str);
 	if (k == 1)
 		ft_lstadd_back_type(head,ft_lstnew_type(str, 6, 0));
 	else if (k == 2)
@@ -25,6 +27,7 @@ void	add_in(size_t *i, char c, t_type **head)
 	else
 		log_error("syntax_error\n");
 }
+
 void	add_out(size_t *i, char c, t_type **head)
 {
 	t_cl	*tmp;
@@ -42,6 +45,9 @@ void	add_out(size_t *i, char c, t_type **head)
 	}
 	(*i)--;
 	str = ll_to_string(list);
+		printf("add_out>>%s\n", str);
+
+	ft_lstclear(&list, &free_char);
 	k = ft_strlen(str);
 	if (k == 1)
 		ft_lstadd_back_type(head,ft_lstnew_type(str, 4, 0));
@@ -65,6 +71,9 @@ int	add_sq(size_t *i, char c, t_type **head)
 	(*i)++;
 	list = fill_list(i, c);
 	str = ll_to_string(list);
+		printf("add_sq>>%s\n", str);
+
+	ft_lstclear(&list, &free_char);
 	if (c == '\'')
 	{
 		(*i)++;
@@ -81,8 +90,7 @@ int	add_sq(size_t *i, char c, t_type **head)
 		else
 			ft_lstadd_back_type(head,ft_lstnew_type(str, 2, 1));
 	}
-	(*i)--;
-	(*i)--;
+	(*i) -= 2;
 	return (1);
 }
 /*i add the charchters till i meet '', "", |, or >  in a struct type t_cl that add a charchter in a c variable
@@ -138,8 +146,12 @@ int		adds(size_t *i, t_type **head)
 		(*i)++;
 	}
 	str = ll_to_string(list);
+		printf("adds>>%s\n", str);
 	tab = ft_split(str, ' ');
 	ffunction(head, tab, *i, 0);
+	free_table(tab);
+	free(str);
+	ft_lstclear(&list, &free_char);
 	(*i)--;
 	return (1);
 }

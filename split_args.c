@@ -6,7 +6,7 @@
 /*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/03 15:30:18 by mamali            #+#    #+#             */
-/*   Updated: 2021/10/03 15:31:07 by mamali           ###   ########.fr       */
+/*   Updated: 2021/11/06 20:22:47 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,3 +189,4 @@ char	**split_args(char *str, char *set)
 	tab = (char **)malloc(sizeof(char *) * (words(str, set, data) + 1));
 	return (norm(loop, str, set, tab));
 }
+

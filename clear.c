@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 03:23:05 by macbook           #+#    #+#             */
-/*   Updated: 2021/11/06 16:35:52 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/06 20:20:34 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,8 @@ void	free_char(void *content)
 
 void clear_and_exit(void)
 {
-	ft_lstclear(&g_data->env, &free_env);
 	ft_lstclear(&g_data->cmd_list, &free_cmd);
-	// ft_lstclear(&g_data->tokkens, &free_type);
 	free(g_data->line);
-	// free(g_data);
 }
 
 void	free_nodes_types(t_type	**list)

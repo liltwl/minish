@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/06 16:35:35 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/06 20:20:45 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1289,7 +1289,7 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 void    ft_check(t_data *l, t_cmd *cmd)
 {
     char *str;
-	
+
 	if (!cmd->cmd || !cmd->str)
 		return ;
     else if(!strncmp(cmd->str[0], "help", 5))
@@ -1443,6 +1443,7 @@ int		main(int argc, char **argv, char **env)
 			g_data->exitstatu = 0;
 		// check_words(tmp);
 	}
+	ft_lstclear(&g_data->env, &free_env);
 	free(g_data);
 	for(;;);
 	return (0);

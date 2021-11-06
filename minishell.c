@@ -134,7 +134,6 @@ void	init_cmd(t_cmd *cmd)
 	cmd->in = 0;
 	cmd->out = 1;
 }
-//wessh weeeeesh
 
 void	expand_cmdlist(t_list *tmp, char *str)
 {
@@ -147,7 +146,7 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	i = 0;
 	if (g_data->syntx == 1)
 	{
-		cmd = NULL;x
+		cmd = NULL;
 		return ;
 	}
 	while (tmp)

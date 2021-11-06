@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:34:36 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/06 16:33:29 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/06 20:21:14 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	free_dpointer(char	**tokkens)
 	}
 	free(tokkens);
 }
+
 char	*get_absolute_path(char **pa, char *cmd)
 {
 	int			i;
@@ -83,9 +84,8 @@ char	*get_absolute_path(char **pa, char *cmd)
 		free(str);
 		i++;
 	}
-	return (0);
+	return (ft_strdup(cmd));
 }
-
 
 char	*get_cmd_path(char *str, t_list *env)
 {
@@ -105,6 +105,5 @@ char	*get_cmd_path(char *str, t_list *env)
 	path = ft_split(cmd, ':');
 	str = get_absolute_path(path, str);
 	free_table(path);
-	// free_dpointer(path);
 	return (str);
 }

@@ -146,7 +146,7 @@ int		adds(size_t *i, t_type **head)
 		(*i)++;
 	}
 	str = ll_to_string(list);
-		printf("adds>>%s\n", str);
+		// printf("adds>>%s\n", str);
 	tab = ft_split(str, ' ');
 	ffunction(head, tab, *i, 0);
 	free_table(tab);

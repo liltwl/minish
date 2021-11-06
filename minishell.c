@@ -190,3 +190,35 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	return (0);
 }*/
 
+int		main(int argc, char **argv, char **env)
+{
+	char **p;
+
+	g_data = malloc(sizeof(t_data));
+	init_env_list(env);
+	g_data->exitstatu = 0;
+	argc = 0;
+	argv = NULL;
+	signal(SIGQUIT, sig_handler);
+	while (1)
+	{
+		g_data->tokkens = NULL;
+		g_data->cmd_list = NULL;
+		g_data->line = NULL;
+		signal(SIGINT, sig_handler);
+		if (!(g_data->line = readline("ader🤡$>")))
+	    	return (1);
+		if (g_data->line[0])
+		{
+			parser();
+			if (g_data->numcmd == 1)
+				ft_check(g_data, g_data->cmd_list->content);
+			else if (g_data->numcmd < 557)
+				mlpipe(g_data);
+			add_history(g_data->line);
+			//free_nodes_cmd(g_data->cmd_list);
+			//free_functio();
+		}
+	}
+	return (0);
+}

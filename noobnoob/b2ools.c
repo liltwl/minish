@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:56:06 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/06 19:10:03 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/07 19:54:01 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	sig_handler(int sig)
         rl_redisplay();
 		ft_putchar_fd('\n', 1);
 		ft_putstr_fd("yoo$> ", 1);
-		//signal(SIGINT, sig_handler);
+		signal(SIGINT, sig_handler);
 	}
 }
 

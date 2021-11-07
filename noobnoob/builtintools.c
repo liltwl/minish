@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:49:54 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/05 11:44:31 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/07 20:49:00 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ t_cmd	*ft_findcmd(t_list *data, int id)
 	int		i;
 
 	i = -1;
+	tmp = data->content;
 	while (tmp && ++i < g_data->numcmd)
 	{
 		tmp = data->content;

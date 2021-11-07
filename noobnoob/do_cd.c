@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:52:15 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/07 20:08:09 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/07 20:42:44 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_docdret(t_data *data)
 		data->exitstatu = 1;
 }
 
-void	ft_docdsing(t_data *data, t_cmd *cmd)
+void	ft_docdsing(t_data *data)
 {
 	t_env	*lst;
 	char	*src;
@@ -74,10 +74,9 @@ void	ft_docdsing(t_data *data, t_cmd *cmd)
 	}
 	else
 		data->exitstatu = 1;
-	if (ft_strlen(cmd->str[1]) > 2)
-	{
-		
-	}
+	
+	
+	
 }
 
 void	ft_docd(t_data *data, t_cmd *cmd)
@@ -88,7 +87,7 @@ void	ft_docd(t_data *data, t_cmd *cmd)
 	if (str[1] && !(ft_cmp("-", str[1])))
 		ft_docdret(data);
 	else if (str[1][0] == '~')
-		ft_docdsing(data, cmd);
+		ft_docdsing(data);
 	else if (str[1])
 	{
 		if (chdir(str[1]) < 0)

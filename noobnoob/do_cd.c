@@ -74,9 +74,6 @@ void	ft_docdsing(t_data *data)
 	}
 	else
 		data->exitstatu = 1;
-	
-	
-	
 }
 
 void	ft_docd(t_data *data, t_cmd *cmd)
@@ -86,7 +83,7 @@ void	ft_docd(t_data *data, t_cmd *cmd)
 	str = cmd->str;
 	if (str[1] && !(ft_cmp("-", str[1])))
 		ft_docdret(data);
-	else if (str[1][0] == '~')
+	else if (!str[1])
 		ft_docdsing(data);
 	else if (str[1])
 	{

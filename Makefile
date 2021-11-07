@@ -11,12 +11,12 @@ NOBFILES = b2ools.c do_echo.c builtintools.c do_cd.c do_env.c do_exit.c do_expor
 
 NOB =  $(addprefix ./noobnoob/, $(NOBFILES))
 
-FLAGS = -Wall -Wextra -Werror -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -I$(HOME)/goinfre/homebrew/opt/readline/include -L$(HOME)/goinfre/homebrew/opt/readline/lib
 
 all : $(NAME)
 
 $(NAME) :
-	@gcc $(MINIFILES) $(NOB) $(LIB) -o $(NAME) -I$(HOME)/goinfre/homebrew/opt/readline/include -L$(HOME)/goinfre/homebrew/opt/readline/lib   -lreadline  -g 
+	@gcc $(MINIFILES) $(NOB) $(LIB) -o $(NAME)    -lreadline  -g 
 fclean:
 	@rm -rf minishell
 

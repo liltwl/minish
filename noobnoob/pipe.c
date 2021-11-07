@@ -39,8 +39,8 @@ void	ft_check(t_data *l, t_cmd *cmd)
 {
 	char	*str;
 
-	printf("%s\n", cmd->cmd);
-	if (!cmd->cmd || !cmd->str)
+	//printf("%s\n", cmd->cmd);
+	if (l->numcmd == 0 || cmd == NULL)
 		return ;
 	else if (!strncmp(cmd->str[0], "help", 5))
 		do_help();

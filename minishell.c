@@ -211,9 +211,9 @@ int		main(int argc, char **argv, char **env)
 		if (g_data->line[0])
 		{
 			parser();
-			if (g_data->numcmd == 1)
+			if (g_data->numcmd == 1 && g_data->cmd_list)
 				ft_check(g_data, g_data->cmd_list->content);
-			else if (g_data->numcmd < 557)
+			else if (g_data->numcmd < 557 && g_data->numcmd > 0 && g_data->cmd_list)
 				mlpipe(g_data);
 			add_history(g_data->line);
 			//free_nodes_cmd(g_data->cmd_list);

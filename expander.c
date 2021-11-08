@@ -41,7 +41,10 @@ static void	to_skip(char *s, size_t *a, t_list **head, size_t i)
 	if (s[i + 1] == '\'' || s[i + 1] == '?')
 	{
 		if (s[i + 1] == '?')
+		{
 			add_string(head, ft_itoa(g_data->exitstatu));
+			(*a)++; // hadi bach nfoto : ?
+		}
 		else
 		{
 			add_to_lk(s, *a, tmp, &list_keys);
@@ -118,6 +121,7 @@ t_type	*expander(t_type *tmp)
 		if (tmp2->type == 0)
 		{
 			to_str = ll_to_string(head);
+			printf("%s\n", to_str);
 			add_tab_to_ll(&new, to_str, tmp2->type, tmp2->a);
 			free(to_str);
 		}

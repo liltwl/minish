@@ -211,6 +211,7 @@ int		main(int argc, char **argv, char **env)
 		if (g_data->line[0])
 		{
 			parser();
+			printf("------\n");
 			if (g_data->numcmd == 1 && g_data->cmd_list)
 				ft_check(g_data, g_data->cmd_list->content);
 			else if (g_data->numcmd < 557 && g_data->numcmd > 0 && g_data->cmd_list)

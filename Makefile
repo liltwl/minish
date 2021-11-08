@@ -11,7 +11,6 @@ MINIFILES = minishell.c\
 			convert_list.c\
 			parser_tools.c\
 			print_functions.c \
-			echo.c\
 			syntax_error.c\
 			parser.c\
 			outils.c\
@@ -20,7 +19,7 @@ MINIFILES = minishell.c\
 			path.c\
 			clear.c
 
-NOBFILES = 	b2ools.c\
+NOBFILES = b2ools.c\
 			do_echo.c\
 			builtintools.c\
 			do_cd.c\

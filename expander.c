@@ -38,21 +38,21 @@ static void	to_skip(char *s, size_t *a, t_list **head, size_t i)
 
 	list_keys = NULL;
 	tmp = NULL;
-	if (s[i + 1] == '\'')
+	if (s[i + 1] == '\'' || s[i + 1] == '?')
 	{
-		add_to_lk(s, *a, tmp, &list_keys);
-		key = ll_to_string(list_keys);
-		add_string(head, key);
-		ft_lstclear(&list_keys, &free_char);
-		free(key);
+		if (s[i + 1] == '?')
+			add_string(head, ft_itoa(g_data->exitstatu));
+		else
+		{
+			add_to_lk(s, *a, tmp, &list_keys);
+			key = ll_to_string(list_keys);
+			add_string(head, key);
+			ft_lstclear(&list_keys, &free_char);
+			free(key);
+		}
 		return ;
 	}
 	(*a)++;
-	if (s[*(a)] == '?')
-	{
-		add_string(head, ft_itoa(g_data->exitstatu));
-		return ;
-	}
 	while (ft_isalnum(s[(*a)]) == 1)
 			add_to_lk(s, (*a)++, tmp, &list_keys);
 	swap = ll_to_string(list_keys);

@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 16:13:55 by mamali            #+#    #+#             */
-/*   Updated: 2021/10/30 01:02:20 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/08 20:37:50 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,18 +103,18 @@ void	printlist_cl(t_list *env)
 	}
 }
 
-void	excute_cmd(void)
-{
-	t_list *tmp;
-	t_cmd *tmp2;
+// void	excute_cmd(void)
+// {
+// 	t_list *tmp;
+// 	t_cmd *tmp2;
 
-	tmp = g_data->cmd_list;
-	while (tmp)
-	{
-		tmp2 = tmp->content;
+// 	tmp = g_data->cmd_list;
+// 	while (tmp)
+// 	{
+// 		tmp2 = tmp->content;
 
-		if (!strcmp(tmp2->cmd, "echo"))
-			builtin_echo(ll_to_dp(tmp2->args_list), NULL);
-		tmp = tmp->next;
-	}
-}
+// 		if (!strcmp(tmp2->cmd, "echo"))
+// 			builtin_echo(ll_to_dp(tmp2->args_list), NULL);
+// 		tmp = tmp->next;
+// 	}
+// }

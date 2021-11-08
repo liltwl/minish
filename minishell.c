@@ -141,9 +141,7 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	t_type	*expanded_types; //katakhed nodes dyal list tmp fihom types m2expandyin
 	t_list	*list_files;
 	t_type	*tmp2; // katpointer eela content dyal list tmp li fiha types.
-	int		i;
 
-	i = 0;
 	if (g_data->syntx == 1)
 	{
 		cmd = NULL;
@@ -151,7 +149,6 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	}
 	while (tmp)
 	{
-		i++;
 		tmp2 = tmp->content;
 		expanded_types = expander(tmp->content);
 		cmd = malloc(sizeof(t_cmd));
@@ -164,7 +161,7 @@ void	expand_cmdlist(t_list *tmp, char *str)
 		free_nodes_types(&expanded_types);
 		tmp = tmp->next;
 	}
-	g_data->numcmd = i;
+	g_data->numcmd = ft_lstsize(g_data->cmd_list);
 }
 
 /*int		main(int argc, char **argv, char **env)

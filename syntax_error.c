@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 20:10:02 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/06 16:48:45 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/08 19:15:50 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ int		check_words(t_type *tmp)
 		}
 		i++;
 	}
-	while (g_data->line[++i] && g_data->line[i] == ' ')
-		i++;
-	if (g_data->line[i] == '|' || g_data->line[i - 1] == '|')
+	i++;
+	ft_spaceskip(g_data->line, &i);
+	if (g_data->line[i] == '|')
 		return (0);
 	tmp2 = tmp;
 	while (tmp2)

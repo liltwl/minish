@@ -189,24 +189,27 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	}
 	return (0);
 }*/
+void	init_data(void)
+{
+	g_data->tokkens = NULL;
+	g_data->cmd_list = NULL;
+	g_data->line = NULL;
+}
+
+// TODO ctrl + c + cat expand+word: norminette
 
 int		main(int argc, char **argv, char **env)
 {
-	char **p;
-
 	g_data = malloc(sizeof(t_data));
 	init_env_list(env);
-	g_data->exitstatu = 0;
 	argc = 0;
 	argv = NULL;
 	signal(SIGQUIT, sig_handler);
 	while (1)
 	{
-		g_data->tokkens = NULL;
-		g_data->cmd_list = NULL;
-		g_data->line = NULL;
+		init_data();
 		signal(SIGINT, sig_handler);
-		if (!(g_data->line = readline("ader🤡$>")))
+		if (!(g_data->line = readline("omareda🤡$>")))
 	    	return (1);
 		if (g_data->line[0])
 		{
@@ -216,9 +219,10 @@ int		main(int argc, char **argv, char **env)
 			else if (g_data->numcmd < 557 && g_data->numcmd > 0 && g_data->cmd_list)
 				mlpipe(g_data);
 			add_history(g_data->line);
-			//free_nodes_cmd(g_data->cmd_list);
-			//free_functio();
 		}
+		clear();
 	}
+	ft_lstclear(&g_data->env, &free_env);
+	free(g_data);
 	return (0);
 }

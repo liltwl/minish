@@ -48,15 +48,17 @@ static void	to_skip(char *s, size_t *a, t_list **head, size_t i)
 		return ;
 	}
 	(*a)++;
+	if (s[*(a)] == '?')
+	{
+		add_string(head, ft_itoa(g_data->exitstatu));
+		return ;
+	}
 	while (ft_isalnum(s[(*a)]) == 1)
 			add_to_lk(s, (*a)++, tmp, &list_keys);
 	swap = ll_to_string(list_keys);
 	ft_lstclear(&list_keys, &free_char);
 	add_string(head, return_env_value(swap));
-			// 	t_cl *t = (*head)->content;
-			// printf("%chgh\n", t->c);
 	free(swap);
-	// free(key);
 	(*a)--;
 }
 // ila kan khasso yt2expanda kanb6a n2ajouter f les charactres f wahd list
@@ -83,11 +85,6 @@ static void	expand_word(char *str, t_list **head, int a, size_t i)
 			to_skip(str , &i, head, f);
 			free(tmp);
 		}
-		else if (str[i] == '?')
-		{
-			ft_putnbr_fd(g_data->exitstatu, 1);
-			free(tmp);
-		}
 		else if (str[i] == ' ' && a == 0)
 		{
 			ft_lstadd_back(head, ft_lstnew(tmp));
@@ -97,9 +94,8 @@ static void	expand_word(char *str, t_list **head, int a, size_t i)
 		}
 		else
 			ft_lstadd_back(head, ft_lstnew(tmp));
-		if (i >= ft_strlen(str) - 1)
+		if (i++ >= ft_strlen(str) - 1)
 			break;
-		i++;
     }
 }
 
@@ -108,7 +104,6 @@ t_type	*expander(t_type *tmp)
     t_type  *tmp2;
     t_type  *new;
 	t_list	*head;
-	char	*str;
 	char	*to_str;
 
     tmp2 = tmp;

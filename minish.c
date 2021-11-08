@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:47:41 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/06 20:20:45 by mamali           ###   ########.fr       */
+/*   Updated: 2021/11/08 19:39:56 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1435,7 +1435,7 @@ int		main(int argc, char **argv, char **env)
 			else if (g_data->numcmd < 557)
 				mlpipe(g_data);
 			add_history(g_data->line);
-			clear_and_exit();
+			clear();
 			// free_nodes_cmd(g_data->cmd_list);
 			// free_functio();
 		}

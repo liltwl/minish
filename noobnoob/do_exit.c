@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:47:07 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/05 12:01:48 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/08 19:52:49 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ int	ft_myatoi(char *str)
 		m = (m * 10) + (str[i++] - 48);
 		if ((m > 9223372036854775807 && n > 0)
 			|| (m - 1 > 9223372036854775807 && n < 0))
-			ft_error("", 255);
+			ft_error("Invalid Arguments!\n", 255);
 	}
 	if (str[i] && !(str[i] >= '0' && str[i] <= '9'))
-		ft_error("", 255);
+		ft_error("Invalid Arguments!\n", 255);
 	return (m * n);
 }
 
@@ -51,7 +51,7 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	if (p[1] && p[2])
 	{
 		data->exitstatu = 1;
-		ft_putstr_fd("", cmd->out);
+		ft_putstr_fd("Invalid Arguments!\n", cmd->out);
 		return ;
 	}
 	else if (p[1])

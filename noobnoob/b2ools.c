@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   b2ools.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:56:06 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/07 19:54:01 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/08 20:09:51 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ void	sig_handler(int sig)
         rl_replace_line("", 0);
         rl_redisplay();
 		ft_putchar_fd('\n', 1);
-		ft_putstr_fd("yoo$> ", 1);
+		ft_putstr_fd("omareda🤡$> ", 1);
 		signal(SIGINT, sig_handler);
+		g_data->exitstatu = 130;
 	}
 }
 

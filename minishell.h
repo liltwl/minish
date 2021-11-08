@@ -131,7 +131,7 @@ char	*get_sq_word(t_type *types, int j, int *f);
 void	free_env(void *content);
 void	free_char(void *content);
 void	free_table(char **table);
-void	clear_and_exit(void);
+void	clear(void);
 void	free_nodes_types(t_type	**list);
 void	free_type(void *content);
 

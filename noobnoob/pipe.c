@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:44:48 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/06 11:47:38 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/08 19:36:21 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 
 void	ft_check(t_data *l, t_cmd *cmd)
 {
-	char	*str;
-
-	//printf("%s\n", cmd->cmd);
 	if (l->numcmd == 0 || cmd == NULL)
 		return ;
 	else if (!strncmp(cmd->str[0], "help", 5))
@@ -64,9 +61,6 @@ void	ft_check(t_data *l, t_cmd *cmd)
 
 void	execdup(t_data *data, int *fds, int x, int fd)
 {
-	t_cmd	*cmd;
-	t_list	*tmp;
-
 	if (x != 0)
 	{
 		dup2(fd, 0);
@@ -78,7 +72,7 @@ void	execdup(t_data *data, int *fds, int x, int fd)
 	close(fds[0]);
 }
 
-void	ft_exitstatu(int *fd, int *fds, t_data *data, pid_t pid)
+void	ft_exitstatu(int *fd, int *fds, pid_t pid)
 {
 	if (pid == -1)
 		ft_putstr_fd("error : fork failed\n", 2);
@@ -110,7 +104,7 @@ void	mlpipe(t_data *data)
 			ft_check(data, ft_findcmd(data->cmd_list, i));
 			exit(data->exitstatu);
 		}
-		ft_exitstatu(&fd, fds, data, pid[i]);
+		ft_exitstatu(&fd, fds, pid[i]);
 	}
 	close (fd);
 	i = -1;

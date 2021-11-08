@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:52:55 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/05 12:02:22 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/08 19:36:37 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	do_env(t_data *data, t_cmd *cmd)
 
 void	do_pwd(t_data *l, t_cmd *cmd)
 {
-	t_env	*tmp;
 	char	*str;
 
 	str = getcwd(NULL, 0);

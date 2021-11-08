@@ -25,5 +25,6 @@ void	init_env_list(char **envp)
 		i++;
 	}
 	g_data->env = env;
+	g_data->exitstatu = 0;
 }
 

@@ -23,6 +23,7 @@ char	**ll_to_dp(t_list *list)
 {
 	int		len;
 	int		i;
+	char	*l;
 	char	**str;
 
 	len = ft_lstsize(list);
@@ -31,6 +32,7 @@ char	**ll_to_dp(t_list *list)
 	while (list)
 	{
 		str[i] = ft_strdup(list->content);
+		l = (char *)list->content;
 		i++;
 		list = list->next;
 	}

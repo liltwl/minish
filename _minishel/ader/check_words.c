@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_words.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:12:17 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/09 13:55:10 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 18:56:58 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	check_dblq(int *i, t_type *tmp1, int *f, char *str)
 
 int	check_words2(int *i, t_type *tmp2)
 {
+	if (g_data->line[*(i)] == '\0')
+		return (1);
 	(*i)++;
 	ft_spaceskip(g_data->line, i);
 	if (g_data->line[*i] == '|')
@@ -58,31 +60,27 @@ int	check_words2(int *i, t_type *tmp2)
 	return (1);
 }
 
-int	check_words(t_type *tmp)
+int	check_words(t_type *tmp, int *i)
 {
 	t_type	*tmp2;
 	t_type	*tmp1;
-	int		i;
 	int		f;
 
-	i = 0;
 	tmp2 = tmp;
 	tmp1 = tmp;
-	if (g_data->line[0] == '|')
-		return (0);
-	while (g_data->line[i] != '|' && g_data->line[i])
+	while (g_data->line[*(i)] && g_data->line[*(i)] != '|')
 	{
-		if (g_data->line[i] == '\'')
+		if (g_data->line[*(i)] == '\'')
 		{
-			if (check_sq(&i, tmp2, &f, NULL) == -1)
+			if (check_sq(i, tmp2, &f, NULL) == -1)
 				return (0);
 		}
-		else if (g_data->line[i] == '"')
+		else if (g_data->line[*(i)] == '"')
 		{
-			if (check_dblq(&i, tmp1, &f, NULL) == -1)
+			if (check_dblq(i, tmp1, &f, NULL) == -1)
 				return (0);
 		}
-		i++;
+		(*i)++;
 	}
-	return (check_words2(&i, tmp));
+	return (check_words2(i, tmp));
 }

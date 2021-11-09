@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:49:35 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/09 15:08:26 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 18:31:24 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ t_type	*expander(t_type *tmp)
 			free(to_str);
 		}
 		else
-			ft_lstadd_back_type(&new,
-				ft_lstnew_type2(ll_to_string(head), tmp->type, tmp->a));
+			ft_lstadd_back_type(&new, ft_lstnew_type2(ll_to_string(head), tmp->type, tmp->a));
 		ft_lstclear(&head, &free_char);
 		tmp = tmp->next;
 	}

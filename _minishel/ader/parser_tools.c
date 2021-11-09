@@ -58,7 +58,7 @@ void	add_sq2(size_t *i, char c, t_type **head, char *str)
 {
 	if (c != '\'')
 	{
-		if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)])
+		if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)] || g_data->line[(*i)] == '|')
 			ft_lstadd_back_type(head, ft_lstnew_type(str, 2, 0));
 		else
 			ft_lstadd_back_type(head, ft_lstnew_type(str, 2, 1));
@@ -79,7 +79,7 @@ int	add_sq(size_t *i, char c, t_type **head)
 	{
 		if (g_data->line)
 		{
-			if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)])
+			if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)] || g_data->line[(*i)] == '|')
 				ft_lstadd_back_type(head, ft_lstnew_type(str, 1, 0));
 			else
 				ft_lstadd_back_type(head, ft_lstnew_type(str, 1, 1));

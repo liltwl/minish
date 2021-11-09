@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 20:10:02 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/09 13:55:10 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 17:24:03 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,13 @@ void	syntax_error(t_list *types)
 {
 	t_type	*tmp;
 	char	*str;
+	int		i;
 
+	i = 0;
 	while (types)
 	{
 		tmp = types->content;
-		if (check_words(tmp) == 0)
+		if (check_words(tmp, &i) == 0)
 		{
 			log_error("syntax_error\n");
 			return ;

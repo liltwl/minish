@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 03:23:05 by macbook           #+#    #+#             */
-/*   Updated: 2021/11/09 15:20:22 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 18:44:11 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,18 @@ void	free_type(void *content)
 void	free_cmd(void *content)
 {
 	t_cmd	*tmp;
+	t_list	*tmp1;
 	//char *str;
 
 	tmp = (t_cmd *)content;
 	//str = (char	*)tmp->args_list->content;
 	//free (str);
-	free(tmp->args_list);
+	while(tmp->args_list)
+	{
+		tmp1 = tmp->args_list;
+		tmp->args_list = tmp->args_list->next;
+		free(tmp1);	
+	}
 	free(tmp->cmd);
 	free_table(tmp->str);
 	free(tmp);

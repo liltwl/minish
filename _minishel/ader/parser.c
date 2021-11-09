@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:48:20 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/09 13:55:10 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 18:48:41 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	expand_cmdlist(t_list *tmp, char *str)
 		get_in(&(cmd->in), list_files, expanded_types);
 		ft_lstadd_back(&g_data->cmd_list, ft_lstnew(cmd));
 		free_nodes_types(&expanded_types);
+		//free(expanded_types);
 		tmp = tmp->next;
 	}
 	g_data->numcmd = ft_lstsize(g_data->cmd_list);

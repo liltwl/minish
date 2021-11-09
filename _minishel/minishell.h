@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:51:08 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/09 13:51:09 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 17:01:28 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_type	*expander(t_type *tmp);
 int		real_character(char *line, int i, char c);
 t_type	*ft_lstnew_type(char *content, int i, int b);
 void	ft_lstadd_back_type(t_type **alst, t_type *new);
-int		check_words(t_type *tmp);
+int		check_words(t_type *tmp, int *i);
 char	*make_string(char *str, char c);
 int		real_character1(char *line, int i, char c);
 char	*return_env_value(char *key);

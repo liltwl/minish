@@ -39,7 +39,7 @@ FLAGS = -Wall -Wextra -Werror -fsanitize=address -I$(HOME)/goinfre/homebrew/opt/
 all : $(NAME)
 
 $(NAME) :
-	@gcc -Wall -Wextra -Werror $(ADER) $(NOB) $(LIB) -o $(NAME) -I$(HOME)/goinfre/homebrew/opt/readline/include -L$(HOME)/goinfre/homebrew/opt/readline/lib   -lreadline  -g 
+	@gcc -Wall -Wextra -Werror $(ADER) $(NOB) $(LIB) -o $(NAME) -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib   -lreadline  -g
 fclean:
 	@rm -rf minishell
 

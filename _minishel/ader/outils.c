@@ -72,6 +72,7 @@ void	add_tab_to_ll(t_type **head, char *str, int type, int a)
 		ft_lstadd_back_type(head, ft_lstnew_type2(tab[i], type, a));
 		i++;
 	}
+	free (tab);
 }
 
 // void	free_nodes_types(t_type	**tmp)

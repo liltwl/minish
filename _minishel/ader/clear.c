@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 03:23:05 by macbook           #+#    #+#             */
-/*   Updated: 2021/11/10 03:34:52 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 17:08:11 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,24 @@ void	free_type(void *content)
 void	free_cmd(void *content)
 {
 	t_cmd	*tmp;
-	t_list	*tmp1;
 	t_list	*args;
+	// t_list	*tmp1;
+	t_list  *help;
 	int		i;
 	
 	i = 0;
 	tmp = (t_cmd *)content;
 	args = tmp->args_list;
-	// str = (char	*)tmp->args_list->content;
-	// free (str);
-	while(args)
+	while (args)
 	{
-		tmp1 = args;
-		if (i == 1)
-			free(args->content);
-		args = args->next;
-		free(tmp1);
-		i = 1;
+		if (args->next)
+			help = args->next;
+		else
+			help = NULL;
+		free(args->content);
+		free(args);
+		args = help;
 	}
-	// system("leaks minishell");
 	free(tmp->cmd);
 	free_table(tmp->str);
 	free(tmp);

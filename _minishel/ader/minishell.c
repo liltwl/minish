@@ -20,7 +20,7 @@ t_list	*get_args(t_list **args, t_type *types, t_cmd **cmd)
 					help_args(&tmp, args);
 			}
 			else
-				ft_lstadd_back(args, ft_lstnew(tmp->word));
+				ft_lstadd_back(args, ft_lstnew(ft_strdup(tmp->word)));
 		}
 		tmp = tmp->next;
 	}

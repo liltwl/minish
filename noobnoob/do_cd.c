@@ -6,7 +6,7 @@
 /*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:52:15 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/07 20:42:44 by otaouil          ###   ########.fr       */
+/*   Updated: 2021/11/09 14:08:40 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	change_oldpwd(t_data *data)
 
 	oldpwd = ft_lstfind(data->env, "OLDPWD");
 	str = oldpwd->content;
-	oldpwd->content = ft_strdup(ft_lstfind(data->env, "PWD")->content);
 	free (str);
+	oldpwd->content = ft_strdup(ft_lstfind(data->env, "PWD")->content);
 }
 
 void	change_pwd(t_data *data)

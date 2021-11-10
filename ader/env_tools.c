@@ -3,24 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   env_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 19:29:01 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/10 19:29:04 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 22:25:47 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	init_env_list(char **envp)
+void	init_env_list(char **envp, int i)
 {
-	int		i;
 	char	**s;
 	t_env	*a;
 	t_list	*env;
 
-	g_data = malloc(sizeof(t_data));
 	i = 1;
+	g_data = malloc(sizeof(t_data));
 	a = malloc(sizeof(t_env));
 	s = ft_split(envp[0], '=');
 	a->name = ft_strdup(s[0]);
@@ -39,6 +38,7 @@ void	init_env_list(char **envp)
 	}
 	g_data->env = env;
 	g_data->exitstatu = 0;
+	signal(SIGQUIT, sig_handler);
 }
 
 void	expand_word(char *str, t_list **head, int a, size_t i)
@@ -76,7 +76,8 @@ t_type	*expander(t_type *tmp)
 			free(to_str);
 		}
 		else
-			ft_lstadd_back_type(&new, ft_lstnew_type2(ll_to_string(head), tmp->type, tmp->a));
+			ft_lstadd_back_type(&new,
+				ft_lstnew_type2(ll_to_string(head), tmp->type, tmp->a));
 		ft_lstclear(&head, &free_char);
 		tmp = tmp->next;
 	}

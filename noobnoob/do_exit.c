@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:47:07 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/08 19:52:49 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 22:34:02 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,12 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 
 	i = data->exitstatu;
 	if (cmd == NULL)
-		exit (i);
+	{
+		ft_lstclear(&g_data->env, &free_env);
+		clear();
+		free(g_data);
+		exit(i);
+	}
 	p = cmd->str;
 	if (p[1] && p[2])
 	{
@@ -56,5 +61,8 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	}
 	else if (p[1])
 		i = (char)ft_myatoi(p[1]);
-	exit (i);
+	ft_lstclear(&g_data->env, &free_env);
+	clear();
+	free(g_data);
+	exit(i);
 }

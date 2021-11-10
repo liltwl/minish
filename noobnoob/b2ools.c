@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   b2ools.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:56:06 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/08 20:09:51 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/09 08:33:12 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 
 void	sig_handler(int sig)
 {
-	char p;
+	char	p;
 
 	p = 10;
 	if (sig == SIGINT)
 	{
-		if(g_data->line)
-			free(g_data->line);
 		rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
-		ft_putchar_fd('\n', 1);
-		ft_putstr_fd("omareda🤡$> ", 1);
+		rl_replace_line("", 0);
+		if (g_data->sigpid == 0)
+		{
+			rl_redisplay();
+			ft_putchar_fd('\n', 1);
+			ft_putstr_fd("omareda🤡$> ", 1);
+		}
+		else
+			ft_putchar_fd('\n', 1);
 		signal(SIGINT, sig_handler);
 		g_data->exitstatu = 130;
 	}
@@ -39,8 +42,10 @@ void	ft_error(char *p, int i)
 
 int	ft_spaceskip(char *line, int *i)
 {
-	while ((line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
-		|| (line[*i] == '\r' || line[*i] == '\v' || line[*i] == '\f'))
+	if (line == NULL)
+		return (0);
+	while (line && ((line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
+			|| (line[*i] == '\r' || line[*i] == '\v' || line[*i] == '\f')))
 		(*i)++;
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/10 20:06:49 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/10 20:06:50 by macbookpro       ###   ########.fr       */
+/*   Created: 2021/11/10 22:24:12 by mamali            #+#    #+#             */
+/*   Updated: 2021/11/10 22:31:49 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,9 @@ void	get_command(t_type *tmp2, char *str,
 
 int	main(int argc, char **argv, char **env)
 {
-	init_env_list(env);
 	argc = 0;
 	argv = NULL;
-	signal(SIGQUIT, sig_handler);
+	init_env_list(env, argc);
 	while (1)
 	{
 		init_data();
@@ -138,11 +137,10 @@ int	main(int argc, char **argv, char **env)
 				ft_check(g_data, g_data->cmd_list->content);
 			else if (g_data->numcmd < 557
 				&& g_data->numcmd > 0 && g_data->cmd_list)
-					mlpipe(g_data);
+				mlpipe(g_data);
 			add_history(g_data->line);
 		}
 		clear();
-		system("leaks minishell");
 	}
 	ft_lstclear(&g_data->env, &free_env);
 	free(g_data);

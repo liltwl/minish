@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: otaouil <otaouil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:44:48 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/08 19:36:21 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/09 08:05:10 by otaouil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 	{
 		dup2(cmd->in, 0);
 		dup2(cmd->out, 1);
-		execve(cmd->cmd, cmd1, NULL); //env
+		execve(cmd->cmd, cmd1, NULL);
 		ft_putstr_fd("yoo: command not found\n", 2);
 		exit(127);
 	}
@@ -37,6 +37,7 @@ void	exec_cmd(char **cmd1, t_data *l, t_cmd *cmd)
 
 void	ft_check(t_data *l, t_cmd *cmd)
 {
+	g_data->sigpid = 1;
 	if (l->numcmd == 0 || cmd == NULL)
 		return ;
 	else if (!strncmp(cmd->str[0], "help", 5))
@@ -88,12 +89,12 @@ void	ft_exitstatu(int *fd, int *fds, pid_t pid)
 void	mlpipe(t_data *data)
 {
 	int		fds[2];
-	pid_t	pid[data->exitstatu];
+	pid_t	*pid;
 	int		i;
 	int		fd;
 
 	i = -1;
-	fd = 0;
+	pid = malloc(sizeof(pid_t *) * (g_data->numcmd + 1));
 	while (++i < data->numcmd)
 	{
 		pipe(fds);
@@ -111,4 +112,5 @@ void	mlpipe(t_data *data)
 	while (++i < data->numcmd)
 		waitpid(pid[i], &data->exitstatu, 0);
 	data->exitstatu = WEXITSTATUS(data->exitstatu);
+	free (pid);
 }

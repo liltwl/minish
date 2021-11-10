@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:34:36 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/10 20:04:24 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 22:30:42 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ void	ffunction(t_type **head, char **tab, size_t i, int f)
 		l++;
 	if (l == 1)
 	{
-		if ((g_data->line[i] == '\'' || g_data->line[i] == '"') && g_data->line[i - 1] != ' ')
+		if ((g_data->line[i] == '\'' || \
+			g_data->line[i] == '"') && g_data->line[i - 1] != ' ')
 			ft_lstadd_back_type(head, ft_lstnew_type(tab[0], 0, 1));
 		else
 			ft_lstadd_back_type(head, ft_lstnew_type(tab[0], 0, 0));

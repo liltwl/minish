@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 03:23:05 by macbook           #+#    #+#             */
-/*   Updated: 2021/11/10 19:26:53 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 22:26:22 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	free_cmd(void *content)
 {
 	t_cmd	*tmp;
 	t_list	*args;
-	t_list  *help;
+	t_list	*help;
 
 	tmp = (t_cmd *)content;
 	args = tmp->args_list;

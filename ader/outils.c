@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   outils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:19:25 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/10 19:43:26 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 22:27:07 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,3 @@ void	free_nodes_env(t_list	**tmp)
 		free(tmp2);
 	}
 }
-

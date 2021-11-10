@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:52:55 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/08 19:36:37 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 17:40:14 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ void	do_pwd(t_data *l, t_cmd *cmd)
 		ft_putstr_fd(str, cmd->out);
 		write(cmd->out, "\n", 1);
 	}
+	free(str);
 	l->exitstatu = 0;
 }

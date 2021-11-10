@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:23:27 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/10 17:01:23 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 19:05:34 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	help_args(t_type **tmp, t_list **args)
 	i = 0;
 	if ((*tmp)->a == 1)
 	{
-		g_data->y = 1;
 		while ((*tmp)->a == 1)
 		{
 			if (i == 0)

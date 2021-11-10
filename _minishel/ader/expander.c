@@ -58,7 +58,9 @@ static void	to_skip(char *s, size_t *a, t_list **head, size_t i)
 	{
 		if (s[i + 1] == '?')
 		{
-			add_string(head, ft_itoa(g_data->exitstatu));
+			key = ft_itoa(g_data->exitstatu);
+			add_string(head, key);
+			free(key);
 			(*a)++;
 		}
 		else

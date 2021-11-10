@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:12:17 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/10 01:51:35 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 17:51:41 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,6 @@ int	check_dblq(int *i, t_type **tmp1, int *f, char *str)
 
 int	check_words2(int *i, t_type *tmp2)
 {
-	if (g_data->line[*(i)] == '\0')
-		return (1);
-	(*i)++;
-	ft_spaceskip(g_data->line, i);
-	if (g_data->line[*i] == '|')
-		return (0);
 	while (tmp2)
 	{
 		if (is_redirection(tmp2->type))
@@ -57,6 +51,12 @@ int	check_words2(int *i, t_type *tmp2)
 				return (0);
 		tmp2 = tmp2->next;
 	}
+	if (g_data->line[*(i)] == '\0')
+		return (1);
+	(*i)++;
+	ft_spaceskip(g_data->line, i);
+	if (g_data->line[*i] == '|')
+		return (0);
 	return (1);
 }
 

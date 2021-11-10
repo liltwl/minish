@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:49:35 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/10 16:07:11 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 19:00:41 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	init_env_list(char **envp)
 	}
 	g_data->env = env;
 	g_data->exitstatu = 0;
-	g_data->y = 0;
 }
 
 void	expand_word(char *str, t_list **head, int a, size_t i)

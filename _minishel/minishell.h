@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:51:08 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/10 16:06:51 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 19:00:31 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ typedef struct s_data
 	int			numcmd;
 	int			syntx;
 	int			sigpid;
-	int			y;
 }				t_data;
 
 t_data	*g_data;

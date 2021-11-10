@@ -108,7 +108,6 @@ void	get_command(t_type *tmp2, char *str,
 
 int	main(int argc, char **argv, char **env)
 {
-	// atexit(leak_report);
 	init_env_list(env);
 	argc = 0;
 	argv = NULL;
@@ -123,19 +122,17 @@ int	main(int argc, char **argv, char **env)
 		if (g_data->line[0])
 		{
 			parser();
-			if (g_data->numcmd == 1 && g_data->cmd_list){
-
+			if (g_data->numcmd == 1 && g_data->cmd_list)
 				ft_check(g_data, g_data->cmd_list->content);
-			}
 			else if (g_data->numcmd < 557
 				&& g_data->numcmd > 0 && g_data->cmd_list)
-				{
 					mlpipe(g_data);
-				}
 			add_history(g_data->line);
 		}
 		clear();
+		system("leaks minishell");
 	}
 	ft_lstclear(&g_data->env, &free_env);
+	free(g_data);
 	return (0);
 }

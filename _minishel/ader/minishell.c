@@ -108,6 +108,7 @@ void	get_command(t_type *tmp2, char *str,
 
 int	main(int argc, char **argv, char **env)
 {
+	// atexit(leak_report);
 	init_env_list(env);
 	argc = 0;
 	argv = NULL;

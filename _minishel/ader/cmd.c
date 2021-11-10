@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:23:27 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/09 22:45:27 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 02:55:34 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 void	help_args(t_type **tmp, t_list **args)
 {
 	char	*str;
+	char	*swap;
 	int		i;
 
 	i = 0;
-	printf("%s | %d\n", (*tmp)->word ,(*tmp)->a);
 	if ((*tmp)->a == 1)
 	{
 		while ((*tmp)->a == 1)
@@ -26,7 +26,11 @@ void	help_args(t_type **tmp, t_list **args)
 			if (i == 0)
 				str = ft_strjoin((*tmp)->word, (*tmp)->next->word);
 			else
-				str = ft_strjoin(str, (*tmp)->next->word);
+			{
+				swap = str;
+				str = ft_strjoin(swap, (*tmp)->next->word);
+				free(swap);
+			}
 			i++;
 			(*tmp) = (*tmp)->next;
 		}

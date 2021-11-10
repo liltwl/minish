@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:48:20 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/09 18:48:41 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 04:04:01 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	expand_cmdlist(t_list *tmp, char *str)
 	t_cmd	*cmd;
 	t_type	*expanded_types;
 	t_list	*list_files;
+	t_list	*help;
 	t_type	*tmp2;
 
 	if (g_data->syntx == 1)
@@ -101,7 +102,15 @@ void	expand_cmdlist(t_list *tmp, char *str)
 		get_in(&(cmd->in), list_files, expanded_types);
 		ft_lstadd_back(&g_data->cmd_list, ft_lstnew(cmd));
 		free_nodes_types(&expanded_types);
-		//free(expanded_types);
+		while (list_files)
+		{
+			if (list_files->next)
+				help = list_files->next;
+			else
+				help = NULL;
+			free(list_files);
+			list_files = help;
+		}
 		tmp = tmp->next;
 	}
 	g_data->numcmd = ft_lstsize(g_data->cmd_list);

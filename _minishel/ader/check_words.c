@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:12:17 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/10 01:38:35 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 01:51:35 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,5 @@ int	check_words(t_type *tmp, int *i)
 		}
 		(*i)++;
 	}
-	printf("hey\n");
 	return (check_words2(i, tmp));
 }

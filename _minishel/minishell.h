@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:51:08 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/10 19:00:31 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 19:57:05 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	excute_cmd(void);
 
 //
 char	**ll_to_dp(t_list *list);
-void	expand_cmdlist(t_list *tmp, char *str);
+void	expand_cmdlist(t_list *tmp, char *str, t_cmd *cmd);
 void	create_file(char *s, t_cmd *cmd);
 char	*ll_to_string(t_list *head);
 void	init_env_list(char **evnp);

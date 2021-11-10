@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 03:23:05 by macbook           #+#    #+#             */
-/*   Updated: 2021/11/10 17:59:20 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 19:26:53 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,12 @@ void	free_cmd(void *content)
 {
 	t_cmd	*tmp;
 	t_list	*args;
-	// t_list	*tmp1;
 	t_list  *help;
-	int		i;
-	
-	i = 0;
+
 	tmp = (t_cmd *)content;
 	args = tmp->args_list;
 	while (args)
 	{
-		// printf(">>%s\n", (char *)args->content);
 		if (args->next)
 			help = args->next;
 		else

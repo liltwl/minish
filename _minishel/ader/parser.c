@@ -6,15 +6,13 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:48:20 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/10 17:06:20 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 20:03:34 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// echo $"$'hf$PWD'gh"hfh
-
-void	function2(int *dblq, int *single, size_t *i, t_type **type)
+void function2(int *dblq, int *single, size_t *i, t_type **type)
 {
 	if (g_data->line[*i] == '\'' && *single == 0 && *dblq == 0)
 		*single = add_sq(i, '\'', type);
@@ -37,59 +35,60 @@ void	function2(int *dblq, int *single, size_t *i, t_type **type)
 		adds(i, (type));
 }
 
-t_type	*function(int dblq, int single, size_t i)
+t_type *function(int dblq, int single, size_t i)
 {
-	t_type	*type;
+	t_type *type;
 
 	type = NULL;
 	while (1)
 	{
 		function2(&dblq, &single, &i, &type);
 		if (i++ >= ft_strlen(g_data->line) - 1)
-			break ;
+			break;
 	}
 	return (type);
 }
 
-void	parser(void)
+void parser(void)
 {
 	t_type	*type;
 	t_list	*tmp1;
+	t_cmd	*cmd;
 	char	*str;
 
 	str = NULL;
+	cmd = NULL;
 	type = function(0, 0, 0);
 	if (type)
 		ft_lstadd_back(&g_data->tokkens, ft_lstnew(type));
 	tmp1 = g_data->tokkens;
 	syntax_error(tmp1);
-	expand_cmdlist(tmp1, str);
+	if (g_data->syntx == 0)
+		expand_cmdlist(tmp1, str, cmd);
 	ft_lstclear(&g_data->tokkens, &free_type);
 }
 
-void	free_functio(void)
+void clear_list_files(t_list **list_files)
 {
-	t_type	*t;
+	t_list *help;
 
-	free(g_data->line);
-	free_nodes_cmd(g_data->cmd_list);
-	t = (t_type *)g_data->tokkens->content;
-	free_nodes_types(&t);
+	while ((*list_files))
+	{
+		if ((*list_files)->next)
+			help = (*list_files)->next;
+		else
+			help = NULL;
+		free((*list_files));
+		(*list_files) = help;
+	}
 }
 
-void	expand_cmdlist(t_list *tmp, char *str)
+void expand_cmdlist(t_list *tmp, char *str, t_cmd *cmd)
 {
-	t_cmd	*cmd;
-	t_type	*expanded_types;
-	t_list	*list_files;
-	t_list	*help;
 	t_type	*tmp2;
+	t_type	*expanded_types;
+	t_list *list_files;
 
-	if (g_data->syntx == 1)
-	{
-		cmd = NULL;
-		return ;
-	}
 	while (tmp)
 	{
 		tmp2 = tmp->content;
@@ -102,15 +101,8 @@ void	expand_cmdlist(t_list *tmp, char *str)
 		get_in(&(cmd->in), list_files, expanded_types);
 		ft_lstadd_back(&g_data->cmd_list, ft_lstnew(cmd));
 		free_nodes_types(&expanded_types);
-		while (list_files)
-		{
-			if (list_files->next)
-				help = list_files->next;
-			else
-				help = NULL;
-			free(list_files);
-			list_files = help;
-		}
+		if (list_files)
+			clear_list_files(&list_files);
 		tmp = tmp->next;
 	}
 	g_data->numcmd = ft_lstsize(g_data->cmd_list);

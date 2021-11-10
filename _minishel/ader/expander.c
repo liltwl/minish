@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/10 19:29:10 by macbookpro        #+#    #+#             */
+/*   Updated: 2021/11/10 19:36:55 by macbookpro       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	add_to_lk(char *s, int a, t_cl *tmp, t_list **list_keys)
@@ -59,24 +71,20 @@ static void	to_skip(char *s, size_t *a, t_list **head, size_t i)
 		if (s[i + 1] == '?')
 		{
 			key = ft_itoa(g_data->exitstatu);
-			add_string(head, key);
-			free(key);
 			(*a)++;
 		}
 		else
 		{
 			add_to_lk(s, *a, tmp, &list_keys);
 			key = ll_to_string(list_keys);
-			add_string(head, key);
 			ft_lstclear(&list_keys, &free_char);
-			free(key);
 		}
+		add_string(head, key);
+		free(key);
 		return ;
 	}
 	to_skip2(s, a, head, tmp);
 }
-// ila kan khasso yt2expanda kanb6a n2ajouter f les charactres f wahd list
-// hta kanl6a $ HHHHH
 
 void	expand_word2(char *str, t_list **head, int a, size_t i)
 {

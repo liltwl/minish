@@ -6,7 +6,7 @@
 /*   By: mamali <mamali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:51:08 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/10 22:32:16 by mamali           ###   ########.fr       */
+/*   Updated: 2021/11/11 00:02:06 by mamali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ char	**ll_to_dp(t_list *list);
 void	expand_cmdlist(t_list *tmp, char *str, t_cmd *cmd);
 void	create_file(char *s, t_cmd *cmd);
 char	*ll_to_string(t_list *head);
-void	init_env_list(char **evnp);
+void	init_env_list(char **evnp, int i);
 void	printlist(t_list *env);
 t_type	*expander(t_type *tmp);
 int		real_character(char *line, int i, char c);

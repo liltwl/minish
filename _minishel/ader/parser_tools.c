@@ -25,6 +25,7 @@ void	add_in(size_t *i, char c, t_type **head)
 		ft_lstadd_back_type(head, ft_lstnew_type(str, 5, 0));
 	else
 		log_error("syntax_error\n");
+	free(str);
 }
 
 void	add_out(size_t *i, char c, t_type **head)
@@ -52,17 +53,20 @@ void	add_out(size_t *i, char c, t_type **head)
 		ft_lstadd_back_type(head, ft_lstnew_type(str, 3, 0));
 	else
 		log_error("syntax_error\n");
+	free(str);
 }
 
 void	add_sq2(size_t *i, char c, t_type **head, char *str)
 {
 	if (c != '\'')
 	{
-		if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)] || g_data->line[(*i)] == '|')
+		if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)] ||\
+			 g_data->line[(*i)] == '|' || is_redirection2(g_data->line[(*i)]))
 			ft_lstadd_back_type(head, ft_lstnew_type(str, 2, 0));
 		else
 			ft_lstadd_back_type(head, ft_lstnew_type(str, 2, 1));
 	}
+	free(str);
 }
 
 int	add_sq(size_t *i, char c, t_type **head)
@@ -79,12 +83,14 @@ int	add_sq(size_t *i, char c, t_type **head)
 	{
 		if (g_data->line)
 		{
-			if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)] || g_data->line[(*i)] == '|')
+			if (g_data->line[(*i)] == ' ' || !g_data->line[(*i)] || \
+				g_data->line[(*i)] == '|' || is_redirection2(g_data->line[(*i)]))
 				ft_lstadd_back_type(head, ft_lstnew_type(str, 1, 0));
 			else
 				ft_lstadd_back_type(head, ft_lstnew_type(str, 1, 1));
 		}
 		(*i) -= 2;
+		free(str);
 		return (1);
 	}
 	add_sq2(i, c, head, str);

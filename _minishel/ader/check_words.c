@@ -6,20 +6,20 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:12:17 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/09 18:56:58 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 01:38:35 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_sq(int *i, t_type *tmp2, int *f, char *str)
+int	check_sq(int *i, t_type **tmp2, int *f, char *str)
 {
 	*f = 1;
-	str = get_sq_word(tmp2, 1, f);
-	while (tmp2 && *f != 0)
+	str = get_sq_word((*tmp2), 1, f);
+	while ((*tmp2) && *f != 0)
 	{
 		(*f)--;
-		tmp2 = tmp2->next;
+		(*tmp2) = (*tmp2)->next;
 	}
 	*i += ft_strlen(str) + 1;
 	if (g_data->line[*i] != '\'')
@@ -27,14 +27,14 @@ int	check_sq(int *i, t_type *tmp2, int *f, char *str)
 	return (0);
 }
 
-int	check_dblq(int *i, t_type *tmp1, int *f, char *str)
+int	check_dblq(int *i, t_type **tmp1, int *f, char *str)
 {
 	*f = 1;
-	str = get_sq_word(tmp1, 2, f);
-	while (tmp1 && *f != 0)
+	str = get_sq_word((*tmp1), 2, f);
+	while ((*tmp1) && *f != 0)
 	{
 		(*f)--;
-		tmp1 = tmp1->next;
+		(*tmp1) = (*tmp1)->next;
 	}
 	*i += ft_strlen(str) + 1;
 	if (g_data->line[*i] != '"')
@@ -72,15 +72,16 @@ int	check_words(t_type *tmp, int *i)
 	{
 		if (g_data->line[*(i)] == '\'')
 		{
-			if (check_sq(i, tmp2, &f, NULL) == -1)
+			if (check_sq(i, &tmp2, &f, NULL) == -1)
 				return (0);
 		}
 		else if (g_data->line[*(i)] == '"')
 		{
-			if (check_dblq(i, tmp1, &f, NULL) == -1)
+			if (check_dblq(i, &tmp1, &f, NULL) == -1)
 				return (0);
 		}
 		(*i)++;
 	}
+	printf("hey\n");
 	return (check_words2(i, tmp));
 }

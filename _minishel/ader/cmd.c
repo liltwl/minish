@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 00:23:27 by macbookpro        #+#    #+#             */
-/*   Updated: 2021/11/09 17:44:30 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/09 22:45:27 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	help_args(t_type **tmp, t_list **args)
 	int		i;
 
 	i = 0;
+	printf("%s | %d\n", (*tmp)->word ,(*tmp)->a);
 	if ((*tmp)->a == 1)
 	{
 		while ((*tmp)->a == 1)

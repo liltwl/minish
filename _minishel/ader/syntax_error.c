@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 20:10:02 by mamali            #+#    #+#             */
-/*   Updated: 2021/11/09 17:24:03 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 01:41:09 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@ void	log_error(char *s)
 	ft_putstr(s);
 	g_data->exitstatu = 258;
 	g_data->syntx = 1;
+}
+
+int	is_redirection2(char c)
+{
+	if (c == '>' || c == '<')
+		return (1);
+	return (0);
 }
 
 int	is_redirection(int i)
@@ -58,6 +65,7 @@ void	syntax_error(t_list *types)
 		types = types->next;
 	}
 	str = g_data->line;
-	if (str[0] == '|')
+	i = ft_strlen(str) - 1;
+	if (str[0] == '|' || str[i] == '|')
 		log_error("syntax_error\n");
 }

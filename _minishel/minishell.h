@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 13:51:08 by otaouil           #+#    #+#             */
-/*   Updated: 2021/11/09 17:01:28 by macbookpro       ###   ########.fr       */
+/*   Updated: 2021/11/10 01:38:04 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,9 @@ void	expand_word(char *str, t_list **head, int a, size_t i);
 void	add_sq2(size_t *i, char c, t_type **head, char *str);
 void	ffunction2(t_type **head, char **tab, size_t i, int f);
 int		check_words2(int *i, t_type *tmp2);
-int		check_dblq(int *i, t_type *tmp1, int *f, char *str);
-int		check_sq(int *i, t_type *tmp2, int *f, char *str);
+int		check_dblq(int *i, t_type **tmp1, int *f, char *str);
+int		check_sq(int *i, t_type **tmp2, int *f, char *str);
+int		is_redirection2(char c);
 
 char	*my_ft_strjoin(char const *s1, char const *s2);
 void	add_out(size_t *i, char c, t_type **head);
